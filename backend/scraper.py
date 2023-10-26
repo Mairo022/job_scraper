@@ -36,8 +36,9 @@ def get_jobs_cv_keskus(start):
     return jobs_list
 
 
-def get_jobs_cv():
-    URL = 'https://cv.ee/api/v1/vacancy-search-service/search?limit=30&offset=0&towns[]=314&fuzzy=true&suitableForRefugees=false&isHourlySalary=false&isRemoteWork=false&isQuickApply=false&sorting=LATEST'
+def get_jobs_cv(start):
+    URL = f'https://cv.ee/api/v1/vacancy-search-service/search?limit=30&offset={start}&towns[]=314&fuzzy=true&suitableForRefugees=false&isHourlySalary=false&isRemoteWork=false&isQuickApply=false&sorting=LATEST'
+
     response = requests.get(URL)
 
     if response.status_code == 200:
@@ -50,7 +51,6 @@ def get_jobs_cv():
             job_clean = {key: job.get(key) for key in keys_to_keep}
             jobs_clean.append(job_clean)
 
-        print(jobs_clean)
         return jobs_clean
 
     return []

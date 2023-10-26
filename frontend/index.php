@@ -1,8 +1,10 @@
 <?php
-    $API_URL = "http://localhost:5000/api/jobs";
-    $start = $_GET['start'];
+    $API_URL = "http://localhost:5000/api";
 
-    $json_data = file_get_contents($API_URL);
+    $start = $_GET['start'];
+    $url = $start ? "{$API_URL}/jobs?start={$start}" : "{$API_URL}/jobs";
+
+    $json_data = file_get_contents($url);
     $response_data = json_decode($json_data);
 
     $cv = $response_data->cv;
@@ -65,6 +67,20 @@
                 </li>
                 <?php endforeach; ?>
             </ul>
+            <div class="job__paging">
+                <a 
+                class="job__paging__page<?= intval($start) == 0 ? ' disabled' : '' ?>" 
+                href="?start=<?= intval($start) <= 30 ? "0" : intval($start)-30 ?>"
+                >
+                Previous
+            </a>
+                <a 
+                class="job__paging__page" 
+                href="?start=<?= intval($start)+30 ?>"
+                >
+                Next
+            </a>
+            </div>
         </section>
     </main>
   </body>

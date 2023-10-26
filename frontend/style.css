@@ -67,8 +67,28 @@ ul {
 .job__info__company {
     color: #31373d;
 }
+
 .job__info__details {
     text-align: right;
     font-size: 0.83em;
     color: #34998a;
+}
+
+
+.job__paging {
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.job__paging__page {
+    text-decoration: none;
+    color: #EEE;
+}
+
+.job__paging__page:hover {
+    color: #169b87;
+}
+
+.job__paging__page.disabled {
+    color: #BBB;
 }
