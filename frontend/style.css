@@ -22,7 +22,7 @@ body {
 
 .jobs {
     margin: 0 auto;
-    max-width: 600px;
+    max-width: 700px;
     width: 100%;
 }
 
@@ -33,21 +33,24 @@ ul {
 }
 
 .job {
-    margin: 20px 0;
+    width: 90%;
+    margin: 20px auto;
     padding: 12px 22px;
     border-radius: 8px;
-    box-shadow: 0 0 4px #acacac77   ;
+    box-shadow: 0 0 4px #acacac77;
     background-color: #F9F9F9;
     color: #222;
-    transition: 0.2s box-shadow ease-in-out;
+    transition: 0.2s box-shadow ease-in-out, 0.4s padding ease, 0.4s width ease;
 }
 
 .job:last-of-type {
-    margin: 0;
+    margin: 0 auto;
 }
 
 .job:hover {
-    transition: 0.2s box-shadow ease-in-out;
+    padding: 10px 22px;
+    width: 86%;
+    transition: 0.2s box-shadow ease-in-out, 0.4s padding ease, 0.4s width ease;
     box-shadow: 0 0 7px #acacac77;
 }
 
