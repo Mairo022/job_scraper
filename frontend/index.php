@@ -1,4 +1,5 @@
 <?php
+    $TOTAL_JOBS = 30;
     $API_URL = "http://localhost:5000/api";
 
     $start = $_GET['start'];
@@ -37,35 +38,37 @@
         <h1 class="title">Jobs</h1>
         <section class="jobs">
             <ul>
-                <?php foreach($cv as $index => $value): ?>
-                <li class="job">
-                    <h3 class="job__position">
-                        <a href="<?= "https://cv.ee/et/vacancy/{$value->id}" ?>"><?= $value->positionTitle ?></a>
-                    </h3>
-                    <div class="job__info">
-                        <span class="job__info__company"><?= $value->employerName ?></span>
-                        <div class="job__info__details">
-                            <span class="job__row__detail"><?= salary_text($value->salaryFrom, $value->salaryTo) ?></span>
-                            <span class="job__row__detail"><?= $value->publishDate ?></span>
+            <?php for ($i = 0; $i < $TOTAL_JOBS; $i++): ?>
+                <?php if (isset($cv[$i])): ?>
+                    <li class="job">
+                        <h3 class="job__position">
+                            <a href="<?= "https://cv.ee/et/vacancy/{$cv[$i]->id}" ?>"><?= $cv[$i]->positionTitle ?></a>
+                        </h3>
+                        <div class="job__info">
+                            <span class="job__info__company"><?= $cv[$i]->employerName ?></span>
+                            <div class="job__info__details">
+                                <span class="job__row__detail"><?= salary_text($cv[$i]->salaryFrom, $cv[$i]->salaryTo) ?></span>
+                                <span class="job__row__detail"><?= $cv[$i]->publishDate ?></span>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <?php endforeach; ?>
+                    </li>
+                <?php endif; ?>
 
-                <?php foreach($cv_keskus as $index => $value): ?>
-                <li class="job">
-                    <h3 class="job__position">
-                        <a href="<?= $value->link ?>"><?= $value->position ?></a>
-                    </h3>
-                    <div class="job__info">
-                        <span class="job__info__company"><?= $value->company ?></span>
-                        <div class="job__info__details">
-                            <span class="job__row__detail"><?= salary_text($value->salary, null) ?></span>
-                            <span class="job__row__detail"><?= $value->time ?></span>
+                <?php if (isset($cv_keskus[$i])): ?>
+                    <li class="job">
+                        <h3 class="job__position">
+                            <a href="<?= $cv_keskus[$i]->link ?>"><?= $cv_keskus[$i]->position ?></a>
+                        </h3>
+                        <div class="job__info">
+                            <span class="job__info__company"><?= $cv_keskus[$i]->company ?></span>
+                            <div class="job__info__details">
+                                <span class="job__row__detail"><?= salary_text($cv_keskus[$i]->salary, null) ?></span>
+                                <span class="job__row__detail"><?= $cv_keskus[$i]->time ?></span>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <?php endforeach; ?>
+                    </li>
+                <?php endif; ?>
+            <?php endfor; ?>
             </ul>
             <div class="job__paging">
                 <a 
