@@ -2,8 +2,8 @@
     $TOTAL_JOBS = 30;
     $API_URL = "http://localhost:5000/api";
 
-    $start = $_GET['start'];
-    $url = $start ? "{$API_URL}/jobs?start={$start}" : "{$API_URL}/jobs";
+    $start = $_GET['start'] ?? 0;
+    $url ="{$API_URL}/jobs?start={$start}";
 
     $json_data = file_get_contents($url);
     $response_data = json_decode($json_data);
@@ -70,18 +70,22 @@
                 <?php endif; ?>
             <?php endfor; ?>
             </ul>
-            <div class="job__paging">
+            <div class="jobs__paging">
                 <a 
-                class="job__paging__page<?= intval($start) == 0 ? ' disabled' : '' ?>" 
+                class="jobs__paging__page<?= intval($start) == 0 ? ' disabled' : '' ?>" 
                 href="?start=<?= intval($start) <= 30 ? "0" : intval($start)-30 ?>"
                 >
-                Previous
+                <svg class="jobs__paging__page__svg" strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
+                    <path d="M17.2 23.7 5.4 12 17.2.3l1.3 1.4L8.4 12l10.1 10.3z" />
+                </svg>
             </a>
                 <a 
-                class="job__paging__page" 
+                class="jobs__paging__page" 
                 href="?start=<?= intval($start)+30 ?>"
                 >
-                Next
+                <svg class="jobs__paging__page__svg"strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
+                    <path d="M6.8 0.3 18.6 12 6.8 23.7 5.5 22.3 15.6 12 5.5 1.7z" />
+                </svg>
             </a>
             </div>
         </section>
