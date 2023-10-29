@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 def get_jobs_cv_keskus(start):
     URL = 'https://www.cvkeskus.ee/toopakkumised?op=search&search%5Bjob_salary%5D=3&ga_track=all_ads&search%5Blocations%5D%5B%5D=4&search%5Bkeyword%5D=&dir=1&sort=activation_date'
-    URL = URL + f'&start={start}' if start != 0 else URL
+    URL = URL + f'&start={start}' if int(start) > 0 else URL
 
     page = requests.get(URL)
 
