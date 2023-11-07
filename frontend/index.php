@@ -3,9 +3,9 @@
     $API_URL = "http://localhost:5000/api";
 
     $start = $_GET['start'] ?? 0;
-    $url ="{$API_URL}/jobs?start={$start}";
+    $url_jobs ="{$API_URL}/jobs?start={$start}";
 
-    $json_data = file_get_contents($url);
+    $json_data = file_get_contents($url_jobs);
     $response_data = json_decode($json_data);
 
     $cv = $response_data->cv;
@@ -22,6 +22,37 @@
             return "{$salary_from} - {$salary_to} | ";
         }
         return "";
+    }
+
+    function format_time($time_arg_str) {
+        $time_arg = new DateTime($time_arg_str);
+        $time_now = new DateTime();
+        $time_diff = $time_now->diff($time_arg);
+
+        $days = $time_diff->d;
+        $hours = $time_diff->h;
+        $minutes = $time_diff->i;
+        $seconds = $time_diff->s;
+
+        if ($days > 0) {
+            if ($days == 1) return "päev tagasi";
+            if ($days < 7) return "{$days} p. tagasi";
+            if ($days < 14) return "nädal tagasi";
+        
+            return round($days/7) . " näd. tagasi";
+        }
+        
+        if ($hours > 0) {
+            return $hours == 1 ? "tund tagasi" : "{$hours} tundi tagasi";
+        }
+        
+        if ($minutes > 0) {
+            return $minutes == 0 ? "minut tagasi" : "${minutes} min. tagasi";
+        }
+        
+        if ($seconds > 0) {
+            return "{$seconds} s. tagasi";
+        }
     }
 ?>
 <!DOCTYPE html>
@@ -48,7 +79,7 @@
                             <span class="job__info__company"><?= $cv[$i]->employerName ?></span>
                             <div class="job__info__details">
                                 <span class="job__row__detail"><?= salary_text($cv[$i]->salaryFrom, $cv[$i]->salaryTo) ?></span>
-                                <span class="job__row__detail"><?= $cv[$i]->publishDate ?></span>
+                                <span class="job__row__detail"><?= format_time($cv[$i]->publishDate) ?></span>
                             </div>
                         </div>
                     </li>
