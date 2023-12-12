@@ -11,17 +11,41 @@
     $cv = $response_data->cv;
     $cv_keskus = $response_data->cv_keskus;
 
-    function salary_text($salary_from, $salary_to) {
+    function salary_text_cv_keskus($salary) {
+        if (!is_null($salary)) {
+            return "{$salary} | ";
+        }
+    }
+
+    function salary_text_cv($salary_from, $salary_to) {
         if (is_null($salary_from) && !is_null($salary_to)) {
-            return "Kuni {$salary_to} | ";
+            $rate = salary_rate($salary_to);
+
+            return "Kuni {$salary_to} " . $rate . " | ";
         }
         if (!is_null($salary_from) && is_null($salary_to)) {
-            return "{$salary_from} | ";
+            $rate = salary_rate($salary_from);
+
+            return "{$salary_from} " . $rate . " | ";
         }
         if (!is_null($salary_from) && !is_null($salary_to)) {
-            return "{$salary_from} - {$salary_to} | ";
+            $rate = salary_rate($salary_from);
+
+            return "{$salary_from} - {$salary_to} " . $rate . " | ";
         }
+
         return "";
+    }
+
+    function salary_rate($salary) {
+        $salary_len = strlen($salary);
+        $contains_comma = str_contains($salary, ".");
+
+        if (($contains_comma && $salary_len < 4) || (!$contains_comma && $salary_len < 3)) {
+            return "€/tunnis";
+        }
+
+        return "€/kuus";
     }
 
     function format_time($time_arg_str) {
@@ -78,7 +102,7 @@
                         <div class="job__info">
                             <span class="job__info__company"><?= $cv[$i]->employerName ?></span>
                             <div class="job__info__details">
-                                <span class="job__row__detail"><?= salary_text($cv[$i]->salaryFrom, $cv[$i]->salaryTo) ?></span>
+                                <span class="job__row__detail"><?= salary_text_cv($cv[$i]->salaryFrom, $cv[$i]->salaryTo) ?></span>
                                 <span class="job__row__detail"><?= format_time($cv[$i]->publishDate) ?></span>
                             </div>
                         </div>
@@ -93,7 +117,7 @@
                         <div class="job__info">
                             <span class="job__info__company"><?= $cv_keskus[$i]->company ?></span>
                             <div class="job__info__details">
-                                <span class="job__row__detail"><?= salary_text($cv_keskus[$i]->salary, null) ?></span>
+                                <span class="job__row__detail"><?= salary_text_cv_keskus($cv_keskus[$i]->salary, null) ?></span>
                                 <span class="job__row__detail"><?= ucfirst($cv_keskus[$i]->time) ?></span>
                             </div>
                         </div>
