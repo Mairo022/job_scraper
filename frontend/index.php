@@ -35,19 +35,19 @@
         $seconds = $time_diff->s;
 
         if ($days > 0) {
-            if ($days == 1) return "päev tagasi";
+            if ($days == 1) return "Päev tagasi";
             if ($days < 7) return "{$days} p. tagasi";
-            if ($days < 14) return "nädal tagasi";
+            if ($days < 14) return "Nädal tagasi";
         
             return round($days/7) . " näd. tagasi";
         }
         
         if ($hours > 0) {
-            return $hours == 1 ? "tund tagasi" : "{$hours} tundi tagasi";
+            return $hours == 1 ? "Tund tagasi" : "{$hours} tundi tagasi";
         }
         
         if ($minutes > 0) {
-            return $minutes == 0 ? "minut tagasi" : "${minutes} min. tagasi";
+            return $minutes == 0 ? "Minut tagasi" : "${minutes} min. tagasi";
         }
         
         if ($seconds > 0) {
@@ -94,7 +94,7 @@
                             <span class="job__info__company"><?= $cv_keskus[$i]->company ?></span>
                             <div class="job__info__details">
                                 <span class="job__row__detail"><?= salary_text($cv_keskus[$i]->salary, null) ?></span>
-                                <span class="job__row__detail"><?= $cv_keskus[$i]->time ?></span>
+                                <span class="job__row__detail"><?= ucfirst($cv_keskus[$i]->time) ?></span>
                             </div>
                         </div>
                     </li>
