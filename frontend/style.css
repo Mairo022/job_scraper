@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
 body {
     background: repeating-linear-gradient(
             45deg,
@@ -5,7 +7,7 @@ body {
             #11284b 150px,
             #11284b 550px
     );
-    font-family: "Noto Sans", Tahoma, sans-serif;
+    font-family: 'Nunito', "Noto Sans", Tahoma, sans-serif;
     font-size: 0.9em;
     min-height: 100vh;
     margin: 0;
