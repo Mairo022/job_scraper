@@ -19,13 +19,39 @@ body {
     text-align: center;
     text-shadow: 0 0 2px #acacac77;
     font-size: 2.6em;
-    padding: 20px 0;
+    padding: 20px 0 10px;
 }
 
 .jobs {
     margin: 0 auto;
     max-width: 700px;
-    width: 100%;
+    width: 90%;
+}
+
+.nav {
+    display: flex;
+    gap: 20px 5px;
+}
+
+.nav__button {
+    flex-grow: 1;
+    flex-basis: 0;
+    padding: 10px 0;
+    border: none;
+    background: transparent;
+    color: white;
+    text-shadow: 0 0 2px #acacac77;
+    font-size: 1.25em;
+    cursor: pointer;
+}
+
+.nav__button:hover {
+    border-bottom: 1px solid white;
+}
+
+.nav__button.active {
+    text-shadow: 0 0 2px #acacac77;
+    border-bottom: 1px solid white;
 }
 
 ul {
@@ -35,7 +61,6 @@ ul {
 }
 
 .job {
-    width: 90%;
     margin: 20px auto;
     padding: 12px 22px;
     border-radius: 8px;

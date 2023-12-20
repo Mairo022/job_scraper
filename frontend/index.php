@@ -86,16 +86,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <script defer src="script.js"></script>
     <title>Jobs</title>
   </head>
   <body>
     <main>
         <h1 class="title">Jobs</h1>
         <section class="jobs">
+            <div class="nav">
+                <button class="nav__button active" id="allBtn" onclick="navBtnClick('all')">All</button>
+                <button class="nav__button" id="cvBtn" onclick="navBtnClick('cv')">CV</button>
+                <button class="nav__button" id="cvkeskusBtn" onclick="navBtnClick('cvkeskus')">CV Keskus</button>
+            </div>
             <ul>
             <?php for ($i = 0; $i < $TOTAL_JOBS; $i++): ?>
                 <?php if (isset($cv[$i])): ?>
-                    <li class="job">
+                    <li class="job job--cv">
                         <h3 class="job__position">
                             <a href="<?= "https://cv.ee/et/vacancy/{$cv[$i]->id}" ?>"><?= $cv[$i]->positionTitle ?></a>
                         </h3>
@@ -110,7 +116,7 @@
                 <?php endif; ?>
 
                 <?php if (isset($cv_keskus[$i])): ?>
-                    <li class="job">
+                    <li class="job job--cvkeskus">
                         <h3 class="job__position">
                             <a href="<?= $cv_keskus[$i]->link ?>"><?= $cv_keskus[$i]->position ?></a>
                         </h3>
