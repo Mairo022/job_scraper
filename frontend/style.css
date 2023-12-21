@@ -61,13 +61,14 @@ ul {
 }
 
 .job {
+    width: calc(100% - 44px);
     margin: 20px auto;
     padding: 12px 22px;
     border-radius: 8px;
     box-shadow: 0 0 4px #acacac77;
     background-color: #F9F9F9;
     color: #222;
-    transition: 0.2s box-shadow ease-in-out, 0.4s padding ease, 0.4s width ease;
+    transition: 0.2s box-shadow ease-in-out, 0.15s width ease;
 }
 
 .job:last-of-type {
@@ -75,9 +76,8 @@ ul {
 }
 
 .job:hover {
-    padding: 10px 22px;
-    width: 86%;
-    transition: 0.2s box-shadow ease-in-out, 0.4s padding ease, 0.4s width ease;
+    width: 89%;
+    transition: 0.2s box-shadow ease-in-out, 0.15s width ease;
     box-shadow: 0 0 7px #acacac77;
 }
 
