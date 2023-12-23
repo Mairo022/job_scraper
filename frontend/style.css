@@ -14,12 +14,22 @@ body {
     padding: 0 20px;
 }
 
-.title {
+.header__title {
+    padding: 20px 0 0;
     color: white;
     text-align: center;
     text-shadow: 0 0 2px #acacac77;
     font-size: 2.6em;
-    padding: 20px 0 10px;
+}
+
+.header__location {
+    position: relative;
+    top: -28px;
+    height: 0;
+    text-align: center;
+    font-size: 1.15em;
+    color: white;
+    text-shadow: 0 0 2px #acacac77;
 }
 
 .jobs {

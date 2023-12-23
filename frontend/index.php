@@ -91,7 +91,10 @@
   </head>
   <body>
     <main>
-        <h1 class="title">Jobs</h1>
+        <header class="header">
+            <h1 class="header__title">Jobs</h1>
+            <p class="header__location">Tartu</p>
+        </header>
         <section class="jobs">
             <div class="nav">
                 <button class="nav__button active" id="allBtn" onclick="navBtnClick('all')">All</button>
