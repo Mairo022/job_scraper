@@ -1,5 +1,5 @@
 <?php
-    $TOTAL_JOBS = 30;
+    $AMOUNT_OF_JOBS_PER_SITE = 30;
     $API_URL = "http://localhost:5000/api";
 
     $start = $_GET['start'] ?? 0;
@@ -11,10 +11,81 @@
     $cv = $response_data->cv;
     $cv_keskus = $response_data->cv_keskus;
 
-    function salary_text_cv_keskus($salary) {
-        if (!is_null($salary)) {
-            return "{$salary} | ";
+    if (!empty($cv) || !empty($cv_keskus)) {
+        $jobs = get_combined_jobs_sorted_by_time($cv, $cv_keskus);
+    }
+
+    function get_combined_jobs_sorted_by_time($cv, $cvk) {
+        global $AMOUNT_OF_JOBS_PER_SITE;
+        $jobs = array();
+        $tempJobsCV = array();
+        $tempJobsCVK = array();
+
+        for ($i = 0; $i < $AMOUNT_OF_JOBS_PER_SITE; $i++) {
+            $timeCV = new DateTime($cv[$i]->publishDate);
+            $timeCVK = new DateTime($cvk[$i]->time);
+            $isCVNewer = $timeCV > $timeCVK;
+
+            if ($isCVNewer) {
+                foreach($tempJobsCV as $job) array_push($jobs, $job);
+                foreach($tempJobsCVK as $index => $job) {
+                    if ($timeCV < new DateTime($job->time)) {
+                        array_push($jobs, $job);
+                        unset($tempJobsCVK[$index]);
+                    } else break;
+                }
+
+                array_push($jobs, $cv[$i]);
+                array_push($tempJobsCVK, $cvk[$i]);
+                $tempJobsCV = array();
+            }
+
+            if (!$isCVNewer) {
+                foreach($tempJobsCVK as $job) array_push($jobs, $job);
+                foreach($tempJobsCV as $index => $job) {
+                    if ($timeCVK < new DateTime($job->publishDate)) {
+                        array_push($jobs, $job);
+                        unset($tempJobsCV[$index]);
+                    } else break;
+                }
+
+                array_push($jobs, $cvk[$i]);
+                array_push($tempJobsCV, $cv[$i]);
+                $tempJobsCVK = array();
+            }
         }
+
+        // Add remaining jobs from tempJobs arrays
+        $lengthTempJobsCV = count($tempJobsCV);
+        $lengthTempJobsCVK = count($tempJobsCVK);
+
+        if ($lengthTempJobsCV > 0) {
+            foreach($tempJobsCV as $index => $job) {
+                if (isset($tempJobsCVK[$index])) {
+                    $isCVNewer = new DateTime($job->publishDate) > new DateTime($tempJobsCVK[$index]->time);
+
+                    if ($isCVNewer) {
+                        array_push($jobs, $job);
+                    } else {
+                        array_push($jobs, $tempJobsCVK[$index]);
+                    }
+                } else {
+                    array_push($jobs, $job);
+                    continue;
+                }
+
+                if ($index == $lengthTempJobsCV - 1) {
+                    for ($j = $index; $j < $lengthTempJobsCVK; $j++)
+                        array_push($jobs, $tempJobsCVK[$j]);
+                }
+            }
+        } else foreach($tempJobsCVK as $job) array_push($jobs, $job);
+
+        return $jobs;
+    }
+
+    function salary_text_cv_keskus($salary) {
+        if (!is_null($salary)) return "{$salary} | ";
     }
 
     function salary_text_cv($salary_from, $salary_to) {
@@ -102,37 +173,36 @@
                 <button class="nav__button" id="cvkeskusBtn" onclick="navBtnClick('cvkeskus')">CV Keskus</button>
             </div>
             <ul>
-            <?php for ($i = 0; $i < $TOTAL_JOBS; $i++): ?>
-                <?php if (isset($cv[$i])): ?>
+            <?php foreach ($jobs as $job): ?>
+                <?php if (isset($job->positionTitle)): ?>
                     <li class="job job--cv">
                         <h3 class="job__position">
-                            <a href="<?= "https://cv.ee/et/vacancy/{$cv[$i]->id}" ?>"><?= $cv[$i]->positionTitle ?></a>
+                            <a href="<?= "https://cv.ee/et/vacancy/{$job->id}" ?>"><?= $job->positionTitle ?></a>
                         </h3>
                         <div class="job__info">
-                            <span class="job__info__company"><?= $cv[$i]->employerName ?></span>
+                            <span class="job__info__company"><?= $job->employerName ?></span>
                             <div class="job__info__details">
-                                <span class="job__row__detail"><?= salary_text_cv($cv[$i]->salaryFrom, $cv[$i]->salaryTo) ?></span>
-                                <span class="job__row__detail"><?= format_time($cv[$i]->publishDate) ?></span>
+                                <span class="job__row__detail"><?= salary_text_cv($job->salaryFrom, $job->salaryTo) ?></span>
+                                <span class="job__row__detail"><?= format_time($job->publishDate) ?></span>
                             </div>
                         </div>
                     </li>
                 <?php endif; ?>
-
-                <?php if (isset($cv_keskus[$i])): ?>
+                <?php if (isset($job->position)): ?>
                     <li class="job job--cvkeskus">
                         <h3 class="job__position">
-                            <a href="<?= $cv_keskus[$i]->link ?>"><?= $cv_keskus[$i]->position ?></a>
+                            <a href="<?= $job->link ?>"><?= $job->position ?></a>
                         </h3>
                         <div class="job__info">
-                            <span class="job__info__company"><?= $cv_keskus[$i]->company ?></span>
+                            <span class="job__info__company"><?= $job->company ?></span>
                             <div class="job__info__details">
-                                <span class="job__row__detail"><?= salary_text_cv_keskus($cv_keskus[$i]->salary, null) ?></span>
-                                <span class="job__row__detail"><?= ucfirst($cv_keskus[$i]->time) ?></span>
+                                <span class="job__row__detail"><?= salary_text_cv_keskus($job->salary, null) ?></span>
+                                <span class="job__row__detail"><?= format_time($job->time) ?></span>
                             </div>
                         </div>
                     </li>
                 <?php endif; ?>
-            <?php endfor; ?>
+            <?php endforeach; ?>
             </ul>
             <div class="jobs__paging">
                 <a 

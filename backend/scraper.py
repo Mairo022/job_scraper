@@ -1,4 +1,4 @@
-import requests
+import requests, timeConverter
 from bs4 import BeautifulSoup
 
 
@@ -26,7 +26,7 @@ def get_jobs_cv_keskus(start):
         job_dict = {
             "position": position.text,
             "company": company.text,
-            "time": time.text,
+            "time": timeConverter.convertCVKeskusToCVTimeFormat(time.text),
             "salary": salary_text,
             "link": link_text
         }
