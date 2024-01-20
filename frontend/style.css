@@ -145,6 +145,7 @@ ul {
 
 .jobs__paging__page.disabled {
     color: #BBB;
+    pointer-events: none;
 }
 
 .jobs__paging__page__svg {
