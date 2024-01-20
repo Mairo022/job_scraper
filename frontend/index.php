@@ -2,8 +2,11 @@
     $AMOUNT_OF_JOBS_PER_SITE = 30;
     $API_URL = "http://localhost:5000/api";
 
-    $start = $_GET['start'] ?? 0;
-    $url_jobs ="{$API_URL}/jobs?start={$start}";
+    $offset = intval($_GET['start']);
+    $offsetNext = $offset + 30;
+    $offsetPrevious = $offset >= 30 ? $offset - 30 : 0;
+
+    $url_jobs ="{$API_URL}/jobs?start={$offset}";
 
     $json_data = file_get_contents($url_jobs);
     $response_data = json_decode($json_data);
@@ -206,8 +209,8 @@
             </ul>
             <div class="jobs__paging">
                 <a 
-                class="jobs__paging__page<?= intval($start) == 0 ? ' disabled' : '' ?>" 
-                href="?start=<?= intval($start) <= 30 ? "0" : intval($start)-30 ?>"
+                class="jobs__paging__page<?= $offset == 0 ? ' disabled' : '' ?>" 
+                href="?start=<?= $offsetPrevious ?>"
                 >
                 <svg class="jobs__paging__page__svg" strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
                     <path d="M17.2 23.7 5.4 12 17.2.3l1.3 1.4L8.4 12l10.1 10.3z" />
@@ -215,7 +218,7 @@
             </a>
                 <a 
                 class="jobs__paging__page" 
-                href="?start=<?= intval($start)+30 ?>"
+                href="?start=<?= $offsetNext ?>"
                 >
                 <svg class="jobs__paging__page__svg"strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
                     <path d="M6.8 0.3 18.6 12 6.8 23.7 5.5 22.3 15.6 12 5.5 1.7z" />
