@@ -140,17 +140,9 @@
             return round($days/7) . " näd. tagasi";
         }
         
-        if ($hours > 0) {
-            return $hours == 1 ? "Tund tagasi" : "{$hours} tundi tagasi";
-        }
-        
-        if ($minutes > 0) {
-            return $minutes == 0 ? "Minut tagasi" : "${minutes} min. tagasi";
-        }
-        
-        if ($seconds > 0) {
-            return "{$seconds} s. tagasi";
-        }
+        if ($hours > 0) return $hours == 1 ? "Tund tagasi" : "{$hours} tundi tagasi";
+        if ($minutes > 0) return $minutes == 0 ? "Minut tagasi" : "{$minutes} min. tagasi";
+        if ($seconds > 0) return "{$seconds} s. tagasi";
     }
 ?>
 <!DOCTYPE html>
