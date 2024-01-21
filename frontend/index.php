@@ -3,8 +3,8 @@
     $API_URL = "http://localhost:5000/api";
 
     $offset = intval($_GET['start']);
-    $offsetNext = $offset + 30;
-    $offsetPrevious = $offset >= 30 ? $offset - 30 : 0;
+    $offsetNext = $offset + $AMOUNT_OF_JOBS_PER_SITE;
+    $offsetPrevious = $offset >= $AMOUNT_OF_JOBS_PER_SITE ? $offset - $AMOUNT_OF_JOBS_PER_SITE : 0;
 
     $url_jobs ="{$API_URL}/jobs?start={$offset}";
 
