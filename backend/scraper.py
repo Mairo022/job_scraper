@@ -12,19 +12,21 @@ def get_jobs_cv_keskus(start):
         page = requests.get(URL)
 
         soup = BeautifulSoup(page.content, "html.parser")
-        jobs = soup.find(class_="jobs-list").find_all("div", class_="main-info")
+        jobs = soup.find(class_="jobs-list").find_all("a", class_="jobad-url")
 
         jobs_list = []
 
         for job in jobs:
-            link = job.find("a")
-            time = job.find("div").find("span")
-            position = job.find("h2")
-            company = job.find(class_="job-company")
-            salary = job.find(class_="salary-block")
+            main_info = job.find("div", class_="main-info")
+
+            time = main_info.find("div").find("span")
+            position = main_info.find("h2")
+            company = main_info.find(class_="job-company")
+            salary = main_info.find(class_="salary-block")
+            link = job.get("href")
 
             salary_text = salary.text.replace("\n", " ").replace("?", "€").replace(" ", "", 1)[:-1] if salary is not None else None
-            link_text = "https://www.cvkeskus.ee" + link.get("href")
+            link_text = "https://www.cvkeskus.ee" + link
 
             job_dict = {
                 "position": position.text,
