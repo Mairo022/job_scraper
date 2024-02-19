@@ -1,12 +1,27 @@
 <?php
     $AMOUNT_OF_JOBS_PER_SITE = 30;
     $API_URL = "http://localhost:5000/api";
+    $LOCATION_DEFAULT = "Tartu";
+    $LOCATIONS = array(
+        0 => "All",
+        1 => "Tallinn",
+        2 => "Tartu",
+        3 => "Pärnu",
+        4 => "Haapsalu",
+        5 => "Jõgeva",
+        6 => "Narva",
+        7 => "Rakvere",
+        8 => "Viimsi",
+        9 => "Viljandi",
+        10 => "Võru"
+    );
 
+    $locationID = isset($_GET['location']) ? intval($_GET['location']) : 2;
     $offset = intval($_GET['start']);
     $offsetNext = $offset + $AMOUNT_OF_JOBS_PER_SITE;
     $offsetPrevious = $offset >= $AMOUNT_OF_JOBS_PER_SITE ? $offset - $AMOUNT_OF_JOBS_PER_SITE : 0;
 
-    $url_jobs ="{$API_URL}/jobs?start={$offset}";
+    $url_jobs = "{$API_URL}/jobs?location={$locationID}&start={$offset}";
 
     $json_data = file_get_contents($url_jobs);
     $response_data = json_decode($json_data);
@@ -159,9 +174,21 @@
     <main>
         <header class="header">
             <h1 class="header__title">Jobs</h1>
-            <p class="header__location">Tartu</p>
         </header>
         <section class="jobs">
+            <div class="location-menu">
+                <div class="location__select">
+                    <div class="location__select-active"><?= $LOCATION_DEFAULT ?></div>
+                    <div class="location__select-button">
+                        <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve"><path id="XMLID_222_" d="M250.606,154.389l-150-149.996c-5.857-5.858-15.355-5.858-21.213,0.001 c-5.857,5.858-5.857,15.355,0.001,21.213l139.393,139.39L79.393,304.394c-5.857,5.858-5.857,15.355,0.001,21.213 C82.322,328.536,86.161,330,90,330s7.678-1.464,10.607-4.394l149.999-150.004c2.814-2.813,4.394-6.628,4.394-10.606 C255,161.018,253.42,157.202,250.606,154.389z"></path></svg>                    
+                    </div>
+                </div>
+                <ul class="location__options">
+                    <?php foreach ($LOCATIONS as $id => $location): ?>
+                        <li class="location__options__option" data-id="<?= $id ?>"><?= $location ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
             <div class="nav">
                 <button class="nav__button active" id="allBtn" onclick="navBtnClick('all')">All</button>
                 <button class="nav__button" id="cvBtn" onclick="navBtnClick('cv')">CV</button>
@@ -202,7 +229,7 @@
             <div class="jobs__paging">
                 <a 
                 class="jobs__paging__page<?= $offset == 0 ? ' disabled' : '' ?>" 
-                href="?start=<?= $offsetPrevious ?>"
+                href='<?= "?location={$locationID}&start={$offsetPrevious}" ?>'
                 >
                 <svg class="jobs__paging__page__svg" strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
                     <path d="M17.2 23.7 5.4 12 17.2.3l1.3 1.4L8.4 12l10.1 10.3z" />
@@ -210,7 +237,7 @@
             </a>
                 <a 
                 class="jobs__paging__page" 
-                href="?start=<?= $offsetNext ?>"
+                href='<?= "?location={$locationID}&start={$offsetNext}" ?>'
                 >
                 <svg class="jobs__paging__page__svg"strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
                     <path d="M6.8 0.3 18.6 12 6.8 23.7 5.5 22.3 15.6 12 5.5 1.7z" />

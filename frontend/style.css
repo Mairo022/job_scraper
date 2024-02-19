@@ -22,20 +22,82 @@ body {
     font-size: 2.6em;
 }
 
-.header__location {
-    position: relative;
-    top: -28px;
-    height: 0;
-    text-align: center;
-    font-size: 1.15em;
-    color: white;
-    text-shadow: 0 0 2px #acacac77;
-}
-
 .jobs {
     margin: 0 auto;
     max-width: 700px;
     width: 90%;
+}
+
+.location-menu {
+    position: relative;
+    margin: 0 auto 20px;
+    max-width: 300px;
+    font-size: 1.17em;
+}
+
+.location__select {
+    height: 23px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 4px #acacac77;
+    background-color: #F9F9F9;
+    color: #222;
+    cursor: pointer;
+    border-bottom: #F9F9F9;
+}
+
+.location__select-active {
+    display: inline-block;
+}
+
+.location__select-button {
+    height: 23px;
+    width: 15px;
+    float: right;
+    transform: rotate(90deg);
+    transition: transform 0.2s ease-in-out;
+}
+
+.location__select-button.open {
+    transform: rotate(90deg) scaleX(-1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.location__options {
+    top: 73px;
+    position: absolute;
+    width: calc(100% - 20px);
+    height: 0;
+    max-height: 400px;
+    padding: 0 10px;
+    border-radius: 8px;
+    background-color: #F9F9F9;
+    box-shadow: 0 0 3px #999;
+    overflow-y: hidden;
+    transition: padding 0.2s 0.2s, height 0.2s ease-in-out;
+}
+
+.location__options.open {
+    height: 400px;
+    padding: 10px 10px;
+    overflow-y: auto;
+    transition: height 0.2s ease-in-out;
+}
+
+.location__options__option {
+    padding: 10px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.location__options__option:hover {
+    background-color: #ebebeb;
+}
+
+.location__options__option.active {
+    margin: 1px 0;
+    background-color: #ebebeb;
+    pointer-events: none;
 }
 
 .nav {

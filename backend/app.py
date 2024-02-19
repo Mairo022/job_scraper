@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
+from constants import LOCATIONS_AVAILABLE
 
 import scraper
 import time
@@ -7,28 +8,43 @@ import logging
 
 app = Flask(__name__)
 
-app.cache_time = 1800
-app.last_scrape_time = time.time() - app.cache_time
-app.last_scrape_data = None
+app.cache_lifespan = 1800
+app.cached_data = dict()
 
 
 @app.route("/api/jobs", methods=['GET'])
 def jobs_data():
-    start = request.args.get("start", 0)
+    start = int(request.args.get("start", 0))
+    location = int(request.args.get("location", 0))
 
-    if start == "0" and time.time() - app.last_scrape_time < app.cache_time:
-        return jsonify(app.last_scrape_data)
+    if start < 0:
+        abort(400, "Invalid offset")
 
-    cv_keskus = scraper.get_jobs_cv_keskus(start)
-    cv = scraper.get_jobs_cv(start)
+    if location not in LOCATIONS_AVAILABLE:
+        abort(400, "Invalid location id")
+
+    if start == 0:
+        cached_data_item = app.cached_data.get(str(location))
+
+        if cached_data_item and is_cache_fresh(cached_data_item.get("time")):
+            return jsonify(cached_data_item.get("data"))
+
+    cv_keskus = scraper.get_jobs_cv_keskus(start, location)
+    cv = scraper.get_jobs_cv(start, location)
 
     combined = {"cv_keskus": cv_keskus, "cv": cv}
 
-    if start == "0" and cv and cv_keskus:
-        app.last_scrape_time = time.time()
-        app.last_scrape_data = combined
+    if start == 0 and cv and cv_keskus:
+        app.cached_data[str(location)] = {
+            "data": combined,
+            "time": time.time()
+        }
 
     return jsonify(combined)
+
+
+def is_cache_fresh(cache_time):
+    return time.time() - cache_time < app.cache_lifespan
 
 
 def initialise_logging():

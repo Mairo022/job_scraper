@@ -3,14 +3,16 @@ import requests
 import timeConverter
 import traceback
 from bs4 import BeautifulSoup
+from constants import LOCATIONS_CVK, LOCATIONS_CV
 
-def get_jobs_cv_keskus(start):
+
+def get_jobs_cv_keskus(start, location):
     try:
-        URL = 'https://www.cvkeskus.ee/toopakkumised?op=search&search%5Bjob_salary%5D=3&ga_track=all_ads&search%5Blocations%5D%5B%5D=4&search%5Bkeyword%5D=&dir=1&sort=activation_date'
-        URL = URL + f'&start={start}' if int(start) > 0 else URL
+        location = LOCATIONS_CVK.get(location)
+        url = f'https://www.cvkeskus.ee/toopakkumised?op=search&search[job_salary]=3&ga_track=results&search[locations][]={location}&search[keyword]=&search[expires_days]=&search[job_lang]=&search[salary]=&dir=1&sort=activation_date'
+        url = url + f'&start={start}' if start > 0 else url
 
-        page = requests.get(URL)
-
+        page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")
         jobs = soup.find(class_="jobs-list").find_all("a", class_="jobad-url")
 
@@ -47,11 +49,11 @@ def get_jobs_cv_keskus(start):
         return []
 
 
-def get_jobs_cv(start):
+def get_jobs_cv(start, location):
     try:
-        URL = f'https://cv.ee/api/v1/vacancy-search-service/search?limit=30&offset={start}&towns[]=314&fuzzy=true&suitableForRefugees=false&isHourlySalary=false&isRemoteWork=false&isQuickApply=false&sorting=LATEST'
-
-        response = requests.get(URL)
+        location = LOCATIONS_CV.get(location)
+        url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit=30&offset={start}&towns[]={location}&fuzzy=true&suitableForRefugees=false&isHourlySalary=false&isRemoteWork=false&isQuickApply=false&sorting=LATEST&showHidden=true"
+        response = requests.get(url)
 
         if response.status_code == 200:
             jobs = response.json().get("vacancies", [])
