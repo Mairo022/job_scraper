@@ -15,23 +15,22 @@
         9 => "Viljandi",
         10 => "Võru"
     );
-
     $locationID = isset($_GET['location']) ? intval($_GET['location']) : 2;
-    $offset = intval($_GET['start']);
+    $offset = intval($_GET['start'] ?? 0);
     $offsetNext = $offset + $AMOUNT_OF_JOBS_PER_SITE;
     $offsetPrevious = $offset >= $AMOUNT_OF_JOBS_PER_SITE ? $offset - $AMOUNT_OF_JOBS_PER_SITE : 0;
 
     $url_jobs = "{$API_URL}/jobs?location={$locationID}&start={$offset}";
 
-    $json_data = file_get_contents($url_jobs);
+    $json_data = @file_get_contents($url_jobs);
     $response_data = json_decode($json_data);
 
-    $cv = $response_data->cv;
-    $cv_keskus = $response_data->cv_keskus;
+    $cv = $response_data->cv ?? null;
+    $cv_keskus = $response_data->cv_keskus ?? null;
 
-    if (!empty($cv) || !empty($cv_keskus)) {
-        $jobs = get_combined_jobs_sorted_by_time($cv, $cv_keskus);
-    }
+    $jobs = !empty($cv) || !empty($cv_keskus) 
+        ? get_combined_jobs_sorted_by_time($cv, $cv_keskus) 
+        : array();
 
     function get_combined_jobs_sorted_by_time($cv, $cvk) {
         global $AMOUNT_OF_JOBS_PER_SITE;
@@ -218,7 +217,7 @@
                         <div class="job__info">
                             <span class="job__info__company"><?= $job->company ?></span>
                             <div class="job__info__details">
-                                <span class="job__row__detail"><?= format_salary_cvkeskus($job->salary, null) ?></span>
+                                <span class="job__row__detail"><?= format_salary_cvkeskus($job->salary) ?></span>
                                 <span class="job__row__detail"><?= format_time($job->time) ?></span>
                             </div>
                         </div>
