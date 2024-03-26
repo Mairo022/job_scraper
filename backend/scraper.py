@@ -21,13 +21,13 @@ def get_jobs_cv_keskus(start, location):
         for job in jobs:
             main_info = job.find("div", class_="main-info")
 
-            time = main_info.find("div").find("span")
+            time = main_info.find("div").find_all("span")[-1]
             position = main_info.find("h2")
             company = main_info.find(class_="job-company")
             salary = main_info.find(class_="salary-block")
             link = job.get("href")
 
-            salary_text = salary.text.replace("\n", " ").replace("?", "€").replace(" ", "", 1)[:-1] if salary is not None else None
+            salary_text = salary.text.rsplit("\xa0", 1)[0] if salary is not None else None
             link_text = "https://www.cvkeskus.ee" + link
 
             job_dict = {
