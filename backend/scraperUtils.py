@@ -1,4 +1,23 @@
+from constants import ADS_LIMIT
 from datetime import datetime, timezone, timedelta
+
+
+def getTimeText(time, jobs, i):
+    if time.split(" ")[-1] == "jäänud":
+        if i == 0:
+            job = jobs[i+1]
+            main_info = job.find("div", class_="main-info")
+            time = main_info.find("div").find_all("span")[-1]
+
+            return time.text
+        if i <= ADS_LIMIT:
+            job = jobs[i-1]
+            main_info = job.find("div", class_="main-info")
+            time = main_info.find("div").find_all("span")[-1]
+
+            return time.text
+
+    return time
 
 
 def convertCVKeskusToCVTimeFormat(time_input: str) -> str:
