@@ -17,7 +17,7 @@ def jobs_data():
     start = start_cv = start_cvk = int(request.args.get("start", 0))
     location = int(request.args.get("location", 0))
 
-    if start < 0:
+    if start < 0 or start % ADS_LIMIT != 0:
         abort(400, "Invalid offset")
 
     if location not in LOCATIONS_AVAILABLE:
