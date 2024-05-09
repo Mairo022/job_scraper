@@ -3,6 +3,7 @@ import logging
 import time
 
 from constants import LOCATIONS_AVAILABLE, CACHE_LIFESPAN
+from pages import Pages
 
 
 def is_cache_fresh(cache_time):
@@ -13,14 +14,21 @@ def initialise_pages():
     pages = dict()
 
     for location in LOCATIONS_AVAILABLE:
-        pages[location] = {
-            "pages": {
-                0: {'cv': 0, 'cvk': 0}
-            },
-            "last_updated": time.time()
-        }
+        pages[location] = Pages(location)
 
     return pages
+
+
+def evaluate_ads_age(cv, cvk):
+    cv_first_ad_date = cv[0].get('publishDate')
+    cvk_first_ad_date = cvk[0].get('time')
+    cv_last_ad_date = cv[-1].get('publishDate')
+    cvk_last_ad_date = cvk[-1].get('time')
+
+    cvk_ads_older = cv_last_ad_date > cvk_first_ad_date
+    cv_ads_older = cvk_last_ad_date > cv_first_ad_date
+
+    return [cv_ads_older, cvk_ads_older]
 
 
 def get_return_data(cv_ads_older, cvk_ads_older, cv, cv_keskus):
