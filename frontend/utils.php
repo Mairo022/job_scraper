@@ -57,13 +57,28 @@ function format_time($time_arg_str) {
     if ($seconds > 0) return "{$seconds} s. tagasi";
 }
 
+function get_location_id() {
+    return isset($_GET['location']) ? intval($_GET['location']) : 2;
+}
+
+function get_offsets() {
+    $offset = intval($_GET['start'] ?? 0);
+    $offsetNext = $offset + JOBS_PER_SITE;
+    $offsetPrevious = $offset >= JOBS_PER_SITE ? $offset - JOBS_PER_SITE : 0;
+
+    return [$offset, $offsetPrevious, $offsetNext];
+}
+
 function get_combined_jobs_sorted_by_time($cv, $cvk) {
-    global $AMOUNT_OF_JOBS_PER_SITE;
+    if (empty($cv) && empty($cv_keskus)) return array();
+    if (empty($cv)) return $cvk;
+    if (empty($cvk)) return $cv;
+    
     $jobs = array();
     $tempJobsCV = array();
     $tempJobsCVK = array();
 
-    for ($i = 0; $i < $AMOUNT_OF_JOBS_PER_SITE; $i++) {
+    for ($i = 0; $i < JOBS_PER_SITE; $i++) {
         $timeCV = new DateTime($cv[$i]->publishDate);
         $timeCVK = new DateTime($cvk[$i]->time);
         $isCVNewer = $timeCV > $timeCVK;

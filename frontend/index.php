@@ -1,38 +1,19 @@
 <?php
+    require 'constants.php';
     require 'utils.php';
-    
-    $AMOUNT_OF_JOBS_PER_SITE = 30;
-    $API_URL = "http://localhost:5000/api";
-    $LOCATION_DEFAULT = "Tartu";
-    $LOCATIONS = array(
-        0 => "All",
-        1 => "Tallinn",
-        2 => "Tartu",
-        3 => "Pärnu",
-        4 => "Haapsalu",
-        5 => "Jõgeva",
-        6 => "Narva",
-        7 => "Rakvere",
-        8 => "Viimsi",
-        9 => "Viljandi",
-        10 => "Võru"
-    );
-    $locationID = isset($_GET['location']) ? intval($_GET['location']) : 2;
-    $offset = intval($_GET['start'] ?? 0);
-    $offsetNext = $offset + $AMOUNT_OF_JOBS_PER_SITE;
-    $offsetPrevious = $offset >= $AMOUNT_OF_JOBS_PER_SITE ? $offset - $AMOUNT_OF_JOBS_PER_SITE : 0;
 
-    $url_jobs = "{$API_URL}/jobs?location={$locationID}&start={$offset}";
+    $locationID = get_location_id();
+    [$offset, $offsetPrevious, $offsetNext] = get_offsets();
 
-    $json_data = @file_get_contents($url_jobs);
-    $response_data = json_decode($json_data);
+    $urlJobs = API_URL . "/jobs?location={$locationID}&start={$offset}";
 
-    $cv = $response_data->cv ?? null;
-    $cv_keskus = $response_data->cv_keskus ?? null;
+    $response = @file_get_contents($urlJobs);
+    $responseData = json_decode($response);
 
-    $jobs = !empty($cv) || !empty($cv_keskus) 
-        ? get_combined_jobs_sorted_by_time($cv, $cv_keskus) 
-        : array();
+    $cv = $responseData->cv ?? null;
+    $cvk = $responseData->cv_keskus ?? null;
+
+    $jobs = get_combined_jobs_sorted_by_time($cv, $cvk);
 ?>
 <!DOCTYPE html>
 <html lang="ee">
@@ -52,13 +33,13 @@
         <section class="jobs">
             <div class="location-menu">
                 <div class="location__select">
-                    <div class="location__select-active"><?= $LOCATION_DEFAULT ?></div>
+                    <div class="location__select-active"><?= LOCATION_DEFAULT ?></div>
                     <div class="location__select-button">
                         <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve"><path id="XMLID_222_" d="M250.606,154.389l-150-149.996c-5.857-5.858-15.355-5.858-21.213,0.001 c-5.857,5.858-5.857,15.355,0.001,21.213l139.393,139.39L79.393,304.394c-5.857,5.858-5.857,15.355,0.001,21.213 C82.322,328.536,86.161,330,90,330s7.678-1.464,10.607-4.394l149.999-150.004c2.814-2.813,4.394-6.628,4.394-10.606 C255,161.018,253.42,157.202,250.606,154.389z"></path></svg>                    
                     </div>
                 </div>
                 <ul class="location__options">
-                    <?php foreach ($LOCATIONS as $id => $location): ?>
+                    <?php foreach (LOCATIONS as $id => $location): ?>
                         <li class="location__options__option" data-id="<?= $id ?>"><?= $location ?></li>
                     <?php endforeach; ?>
                 </ul>
