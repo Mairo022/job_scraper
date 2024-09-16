@@ -11,6 +11,9 @@ const locationSelectText = document.querySelector(".location__select-active")
 const locationSelectButton = document.querySelector(".location__select-button")
 const locationOptions = document.querySelector(".location__options")
 
+const itFilterStatus = document.querySelector(".it_filter__status")
+
+const urlParams = new URLSearchParams(window.location.search)
 let isLocationsOpen = false
 
 body.addEventListener("click", handleBodyClick)
@@ -18,6 +21,15 @@ locationSelect.addEventListener("click", handleLocationSelectState)
 locationOptions.addEventListener("click", handleLocationOptionSelect)
 
 initialLoadSelectLocation()
+initialSetITFilterStatus()
+
+function initialSetITFilterStatus() {
+    const category = urlParams.get("category")
+
+    if (category == '1') {
+        itFilterStatus.classList.add("active")
+    }
+}
 
 function initialLoadSelectLocation() {
     const locationRegex = /(?<=location=)\d+/
@@ -48,8 +60,11 @@ function handleLocationSelectState() {
 
 function handleLocationOptionSelect(e) {
     if (e.target.className === "location__options open") return
+
+    const categoryID = urlParams.get("category") ?? 0
     const locationID = e.target.dataset.id
-    window.location.href = `?location=${locationID}&start=0`
+
+    window.location.href = `?location=${locationID}&start=0&category=${categoryID}`
 }
 
 function handleBodyClick(e) {

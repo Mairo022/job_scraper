@@ -2,15 +2,18 @@ import logging
 import requests
 import traceback
 from bs4 import BeautifulSoup
-from constants import LOCATIONS_CVK, LOCATIONS_CV, ADS_LIMIT
+from constants import LOCATIONS_CVK, LOCATIONS_CV, ADS_LIMIT, CATEGORIES_CVK, CATEGORIES_CV
 from scraperUtils import *
 
 
-def get_jobs_cv_keskus(start, location):
+def get_jobs_cv_keskus(start, location, category):
     try:
         location = LOCATIONS_CVK.get(location)
-        url = f'https://www.cvkeskus.ee/toopakkumised?op=search&search[job_salary]=3&ga_track=results&search[locations][]={location}&search[keyword]=&search[expires_days]=&search[job_lang]=&search[salary]=&dir=1&sort=activation_date'
+        category = CATEGORIES_CVK.get(category)
+
+        url = f'https://www.cvkeskus.ee/toopakkumised?op=search&search[job_salary]=3&ga_track=homepage&search[locations][]={location}&search[keyword]=&dir=1&sort=activation_date'
         url = url + f'&start={start}' if start > 0 else url
+        url = url + f'&search[categories][]={category}' if category != 0 else url
 
         page = requests.get(url)
         soup = BeautifulSoup(page.content, "html.parser")
@@ -50,12 +53,15 @@ def get_jobs_cv_keskus(start, location):
         return []
 
 
-def get_jobs_cv(start, location):
+def get_jobs_cv(start, location, category):
     try:
         location = LOCATIONS_CV.get(location)
-        url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ADS_LIMIT}&offset={start}&towns[]={location}&fuzzy=true&suitableForRefugees=false&isHourlySalary=false&isRemoteWork=false&isQuickApply=false&sorting=LATEST&showHidden=true"
-        response = requests.get(url)
+        category = CATEGORIES_CV.get(category)
 
+        url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ADS_LIMIT}&offset={start}&towns[]={location}&fuzzy=true&sorting=LATEST&showHidden=true"
+        url = url + f'&categories[]={category}' if category != 0 else url
+
+        response = requests.get(url)
         if response.status_code == 200:
             jobs = response.json().get("vacancies", [])
 

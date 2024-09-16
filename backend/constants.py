@@ -44,3 +44,19 @@ LOCATIONS_CVK = {
     9: 21,
     10: 22
 }
+
+# Categories
+# 0 - All
+# 1 - Information technology
+
+CATEGORIES_AVAILABLE = (0, 1)
+
+CATEGORIES_CV = {
+    0: 0,
+    1: 'INFORMATION_TECHNOLOGY'
+}
+
+CATEGORIES_CVK = {
+    0: 0,
+    1: 8
+}

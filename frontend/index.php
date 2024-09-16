@@ -3,9 +3,10 @@
     require 'utils.php';
 
     $locationID = get_location_id();
+    $categoryID = get_category_id();
     [$offset, $offsetPrevious, $offsetNext] = get_offsets();
 
-    $urlJobs = API_URL . "/jobs?location={$locationID}&start={$offset}";
+    $urlJobs = API_URL . "/jobs?location={$locationID}&start={$offset}&category={$categoryID}";
 
     $response = @file_get_contents($urlJobs);
     $responseData = json_decode($response);
@@ -31,6 +32,10 @@
             <h1 class="header__title">Jobs</h1>
         </header>
         <section class="jobs">
+            <a class="it_filter" href='<?= $categoryID == 0 ? "?location=0&category=1" : "?location={$locationID}&category=0 " ?>'>
+                <div class="it_filter__status"></div>
+                <span class="it_filter__text">IT only</span>
+            </a>
             <div class="location-menu">
                 <div class="location__select">
                     <div class="location__select-active"><?= LOCATION_DEFAULT ?></div>
@@ -84,7 +89,7 @@
             <div class="jobs__paging">
                 <a 
                 class="jobs__paging__page<?= $offset == 0 ? ' disabled' : '' ?>" 
-                href='<?= "?location={$locationID}&start={$offsetPrevious}" ?>'
+                href='<?= "?location={$locationID}&start={$offsetPrevious}&category={$categoryID}" ?>'
                 >
                 <svg class="jobs__paging__page__svg" strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
                     <path d="M17.2 23.7 5.4 12 17.2.3l1.3 1.4L8.4 12l10.1 10.3z" />
@@ -92,7 +97,7 @@
             </a>
                 <a 
                 class="jobs__paging__page" 
-                href='<?= "?location={$locationID}&start={$offsetNext}" ?>'
+                href='<?= "?location={$locationID}&start={$offsetNext}&category={$categoryID}" ?>'
                 >
                 <svg class="jobs__paging__page__svg"strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
                     <path d="M6.8 0.3 18.6 12 6.8 23.7 5.5 22.3 15.6 12 5.5 1.7z" />

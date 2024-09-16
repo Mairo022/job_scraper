@@ -16,17 +16,20 @@ def initialise_pages():
     return pages
 
 
-def get_jobs(offset, location, cache, real_pages):
-    if offset == 0:
+def get_jobs(offset, location, cache, real_pages, category):
+    if offset == 0 and category == 0:
         cached_data_item = cache.get(str(location))
 
         if cached_data_item and is_cache_fresh(cached_data_item.get("time")):
             return cached_data_item.get("data")
 
     start_cv, start_cvk = real_pages.get_pages(offset)
-    cvk = scraper.get_jobs_cv_keskus(start_cvk, location)
-    cv = scraper.get_jobs_cv(start_cv, location)
+    cvk = scraper.get_jobs_cv_keskus(start_cvk, location, category)
+    cv = scraper.get_jobs_cv(start_cv, location, category)
     cv_ads_older, cvk_ads_older = evaluate_ads_age(cv, cvk)
+
+    if category != 0:
+        return assign_jobs(cv_ads_older, cvk_ads_older, cv, cvk)
 
     real_pages.set_pages(offset, start_cv, start_cvk, cv_ads_older, cvk_ads_older)
 

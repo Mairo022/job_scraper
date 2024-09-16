@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, abort
 
 from appUtils import *
-from constants import LOCATIONS_AVAILABLE, ADS_LIMIT
+from constants import LOCATIONS_AVAILABLE, CATEGORIES_AVAILABLE, ADS_LIMIT
 
 
 app = Flask(__name__)
@@ -14,6 +14,7 @@ app.real_pages = initialise_pages()
 def jobs_data():
     start = int(request.args.get("start", 0))
     location = int(request.args.get("location", 0))
+    category = int(request.args.get("category", 0))
 
     if start < 0 or start % ADS_LIMIT != 0:
         abort(400, "Invalid offset")
@@ -21,7 +22,10 @@ def jobs_data():
     if location not in LOCATIONS_AVAILABLE:
         abort(400, "Invalid location id")
 
-    job_ads = get_jobs(start, location, app.cached_data, app.real_pages[location])
+    if category not in CATEGORIES_AVAILABLE:
+        abort(400, "Invalid category")
+
+    job_ads = get_jobs(start, location, app.cached_data, app.real_pages[location], category)
 
     return jsonify(job_ads)
 

@@ -61,6 +61,10 @@ function get_location_id() {
     return isset($_GET['location']) ? intval($_GET['location']) : 2;
 }
 
+function get_category_id() {
+    return isset($_GET['category']) ? intval($_GET['category']) : 0;
+}
+
 function get_offsets() {
     $offset = intval($_GET['start'] ?? 0);
     $offsetNext = $offset + JOBS_PER_SITE;

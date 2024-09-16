@@ -15,7 +15,7 @@ body {
 }
 
 .header__title {
-    margin: 45px auto;
+    margin: 60px auto;
     color: white;
     text-align: center;
     text-shadow: 0 0 2px #acacac77;
@@ -28,9 +28,50 @@ body {
     width: 90%;
 }
 
+.it_filter {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    margin: 0 auto 10px;
+    width: 100%;
+    max-width: 300px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: #222;
+    background-color: #F9F9F9;
+    text-decoration: none;
+    font-size: 1.17em;
+}
+
+.it_filter:hover {
+    background-color: hsl(0, 0%, 85%);
+}
+
+.it_filter__status {
+    position: absolute;
+    display: inline-block;
+    right: 15.5px;
+    top: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+    background: hsl(0, 0%, 60%);
+}
+
+.it_filter__status.active {
+    background: hsl(171, 49%, 40%);
+}
+
+.it_filter__text {
+    display: block;
+    text-align: left;
+}
+
 .location-menu {
     position: relative;
-    margin: 0 auto 20px;
+    margin: 0 auto 40px;
+    width: 100%;
     max-width: 300px;
     font-size: 1.17em;
 }
@@ -78,6 +119,7 @@ body {
 }
 
 .location__options.open {
+    z-index: 10;
     height: 400px;
     padding: 10px 10px;
     overflow-y: auto;
