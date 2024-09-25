@@ -2,10 +2,10 @@
 
 body {
     background: repeating-linear-gradient(
-            45deg,
-            #142e55 0px,
-            #11284b 150px,
-            #11284b 550px
+            75deg,
+            hsl(216, 52%, 15%) 0px,
+            hsl(216, 53%, 14%) 150px,
+            hsl(216, 53%, 12%) 550px
     );
     font-family: 'Nunito', "Noto Sans", Tahoma, sans-serif;
     font-size: 0.9em;
@@ -33,6 +33,7 @@ body {
     gap: 20px 1rem;
     margin: 6rem 0 2.5rem;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .it_filter {
@@ -41,7 +42,7 @@ body {
     display: block;
     box-sizing: border-box;
     height: fit-content;
-    width: 100%;
+    flex: 1 1 120px;
     max-width: 300px;
     padding: 10px 20px;
     border-radius: 8px;
@@ -79,6 +80,7 @@ body {
 .location-menu {
     position: relative;
     width: 100%;
+    flex: 1 1 250px;
     max-width: 300px;
     font-size: 1.17em;
 }
@@ -112,7 +114,7 @@ body {
 }
 
 .location__options {
-    top: 73px;
+    top: 70px;
     position: absolute;
     width: calc(100% - 20px);
     height: 0;
@@ -219,14 +221,14 @@ ul {
 }
 
 .jobs__paging {
-    margin: 30px 0 25px;
-    padding: 15px 0;
+    margin: 1rem 0 2rem;
     text-align: center;
 }
 
 .jobs__paging__page {
     display: inline-block;
     width: 40%;
+    padding: 20px 0;
     max-width: 200px;
     text-decoration: none;
     color: #EEE;
