@@ -32,31 +32,28 @@
             <h1 class="header__title">Jobs</h1>
         </header>
         <section class="jobs">
-            <a class="it_filter" href='<?= $categoryID == 0 ? "?location=0&category=1" : "?location={$locationID}&category=0 " ?>'>
-                <div class="it_filter__status"></div>
-                <span class="it_filter__text">IT only</span>
-            </a>
-            <div class="location-menu">
-                <div class="location__select">
-                    <div class="location__select-active"><?= LOCATION_DEFAULT ?></div>
-                    <div class="location__select-button">
-                        <svg fill="#444" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve"><path id="XMLID_222_" d="M250.606,154.389l-150-149.996c-5.857-5.858-15.355-5.858-21.213,0.001 c-5.857,5.858-5.857,15.355,0.001,21.213l139.393,139.39L79.393,304.394c-5.857,5.858-5.857,15.355,0.001,21.213 C82.322,328.536,86.161,330,90,330s7.678-1.464,10.607-4.394l149.999-150.004c2.814-2.813,4.394-6.628,4.394-10.606 C255,161.018,253.42,157.202,250.606,154.389z"></path></svg>                    
+            <div class="filters">
+                <a class="it_filter" href='<?= $categoryID == 0 ? "?location=0&category=1" : "?location={$locationID}&category=0 " ?>'>
+                    <div class="it_filter__status"></div>
+                    <span class="it_filter__text">IT only</span>
+                </a>
+                <div class="location-menu">
+                    <div class="location__select">
+                        <div class="location__select-active"><?= LOCATION_DEFAULT ?></div>
+                        <div class="location__select-button">
+                            <svg fill="#444" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330 330" xml:space="preserve"><path id="XMLID_222_" d="M250.606,154.389l-150-149.996c-5.857-5.858-15.355-5.858-21.213,0.001 c-5.857,5.858-5.857,15.355,0.001,21.213l139.393,139.39L79.393,304.394c-5.857,5.858-5.857,15.355,0.001,21.213 C82.322,328.536,86.161,330,90,330s7.678-1.464,10.607-4.394l149.999-150.004c2.814-2.813,4.394-6.628,4.394-10.606 C255,161.018,253.42,157.202,250.606,154.389z"></path></svg>                    
+                        </div>
                     </div>
-                </div>
-                <ul class="location__options">
-                    <?php foreach (LOCATIONS as $id => $location): ?>
-                        <li class="location__options__option" data-id="<?= $id ?>">
-                            <a class="location__options__option__link" href='<?= "?location=$id&start=0&category=$categoryID" ?>'>
-                                <?= $location ?>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-            <div class="nav">
-                <button class="nav__button active" id="allBtn" onclick="navBtnClick('all')">All</button>
-                <button class="nav__button" id="cvBtn" onclick="navBtnClick('cv')">CV</button>
-                <button class="nav__button" id="cvkeskusBtn" onclick="navBtnClick('cvkeskus')">CV Keskus</button>
+                    <ul class="location__options">
+                        <?php foreach (LOCATIONS as $id => $location): ?>
+                            <li class="location__options__option" data-id="<?= $id ?>">
+                                <a class="location__options__option__link" href='<?= "?location=$id&start=0&category=$categoryID" ?>'>
+                                    <?= $location ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>                
             </div>
             <ul>
             <?php foreach ($jobs as $job): ?>

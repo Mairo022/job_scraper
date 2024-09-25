@@ -15,7 +15,7 @@ body {
 }
 
 .header__title {
-    margin: 60px auto;
+    margin: 6rem auto;
     color: white;
     text-align: center;
     text-shadow: 0 0 2px #acacac77;
@@ -28,11 +28,19 @@ body {
     width: 90%;
 }
 
+.filters {
+    display: flex;
+    gap: 20px 1rem;
+    margin: 6rem 0 2.5rem;
+    justify-content: center;
+}
+
 .it_filter {
+    order: 2;
     position: relative;
     display: block;
     box-sizing: border-box;
-    margin: 0 auto 10px;
+    height: fit-content;
     width: 100%;
     max-width: 300px;
     padding: 10px 20px;
@@ -70,7 +78,6 @@ body {
 
 .location-menu {
     position: relative;
-    margin: 0 auto 40px;
     width: 100%;
     max-width: 300px;
     font-size: 1.17em;
@@ -147,33 +154,6 @@ body {
     width: 100%;
     color: #222;
     text-decoration: none;
-}
-
-.nav {
-    display: flex;
-    gap: 20px 5px;
-    margin: 25px 0 30px;
-}
-
-.nav__button {
-    flex-grow: 1;
-    flex-basis: 0;
-    padding: 10px 0;
-    border: none;
-    background: transparent;
-    color: white;
-    text-shadow: 0 0 2px #acacac77;
-    font-size: 1.25em;
-    cursor: pointer;
-}
-
-.nav__button:hover {
-    border-bottom: 1px solid white;
-}
-
-.nav__button.active {
-    text-shadow: 0 0 2px #acacac77;
-    border-bottom: 1px solid white;
 }
 
 ul {

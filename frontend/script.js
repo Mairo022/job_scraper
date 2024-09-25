@@ -58,15 +58,22 @@ function handleLocationSelectState() {
 }
 
 function handleBodyClick(e) {
-    if (!isLocationsOpen || e.target.className.includes("location__select")) return
+    const isValidLocationSelectCloseClick = isLocationsOpen 
+        && !e.target.className.includes("location__select")
+        && !e.target.className.includes("location__options")
 
-    if (!e.target.className.includes("location__options")) {
-        isLocationsOpen = false
-        locationOptions.className = "location__options"
-        locationSelectButton.className = "location__select-button"
+    if (isValidLocationSelectCloseClick) {
+        closeOpenLocationSelect(e)
     }
 }
 
+function closeOpenLocationSelect(e) {
+    isLocationsOpen = false
+    locationOptions.className = "location__options"
+    locationSelectButton.className = "location__select-button"
+}
+
+// For debugging
 function navBtnClick(type) {
     if (type === "all") {
         if (allButton.classList.contains("active")) {
