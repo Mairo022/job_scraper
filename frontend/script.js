@@ -18,7 +18,6 @@ let isLocationsOpen = false
 
 body.addEventListener("click", handleBodyClick)
 locationSelect.addEventListener("click", handleLocationSelectState)
-locationOptions.addEventListener("click", handleLocationOptionSelect)
 
 initialLoadSelectLocation()
 initialSetITFilterStatus()
@@ -56,15 +55,6 @@ function handleLocationSelectState() {
         locationOptions.className = "location__options open"
         locationSelectButton.className = "location__select-button open"
     }
-}
-
-function handleLocationOptionSelect(e) {
-    if (e.target.className === "location__options open") return
-
-    const categoryID = urlParams.get("category") ?? 0
-    const locationID = e.target.dataset.id
-
-    window.location.href = `?location=${locationID}&start=0&category=${categoryID}`
 }
 
 function handleBodyClick(e) {
