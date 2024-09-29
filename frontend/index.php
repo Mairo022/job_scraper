@@ -2,13 +2,22 @@
     require 'constants.php';
     require 'utils.php';
 
+    $ip = get_ip_address();
     $locationID = get_location_id();
     $categoryID = get_category_id();
     [$offset, $offsetPrevious, $offsetNext] = get_offsets();
-
+    
+    $requestOptions = [
+        'http' => [
+            'header'  => "X-Real-IP: $ip",
+            'method'  => 'GET'
+        ],
+    ];
+    
+    $context  = stream_context_create($requestOptions);
     $urlJobs = API_URL . "/jobs?location={$locationID}&start={$offset}&category={$categoryID}";
 
-    $response = @file_get_contents($urlJobs);
+    $response = @file_get_contents($urlJobs, false, $context);
     $responseData = json_decode($response);
 
     $cv = $responseData->cv ?? null;

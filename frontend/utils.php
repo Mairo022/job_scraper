@@ -25,7 +25,7 @@ function format_salary_cv($salary_from, $salary_to) {
 
 function get_salary_rate($salary) {
     $salary_len = strlen($salary);
-    $contains_comma = str_contains($salary, ".");
+    $contains_comma = strpos($salary, ".");
 
     if (($contains_comma && $salary_len < 4) || (!$contains_comma && $salary_len < 3)) {
         return "€/tunnis";
@@ -71,6 +71,14 @@ function get_offsets() {
     $offsetPrevious = $offset >= JOBS_PER_SITE ? $offset - JOBS_PER_SITE : 0;
 
     return [$offset, $offsetPrevious, $offsetNext];
+}
+
+function get_ip_address() {
+    if (!empty($_SERVER["HTTP_X_REAL_IP"])) {
+        return trim($_SERVER["HTTP_X_REAL_IP"]);
+    } else {
+        return $_SERVER["REMOTE_ADDR"];
+    }
 }
 
 function get_combined_jobs_sorted_by_time($cv, $cvk) {
