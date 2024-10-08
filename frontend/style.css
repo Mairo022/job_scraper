@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
 
+:root {
+    --border-radius: 4px;
+    --shadow: 0 0 4px hsla(0, 0%, 40%, 0.5);
+    --shadow-hover: 0 0 6px hsla(0, 0%, 40%, 0.5);
+}
+
 body {
     background: repeating-linear-gradient(
             75deg,
@@ -31,7 +37,7 @@ body {
 .filters {
     display: flex;
     gap: 20px 1rem;
-    margin: 6rem 0 2.5rem;
+    margin: 6rem 0 3rem;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -45,7 +51,7 @@ body {
     flex: 1 1 120px;
     max-width: 300px;
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     color: #222;
     background-color: #F9F9F9;
     text-decoration: none;
@@ -88,8 +94,8 @@ body {
 .location__select {
     height: 23px;
     padding: 10px 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 4px #acacac77;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
     background-color: #F9F9F9;
     color: #222;
     cursor: pointer;
@@ -120,9 +126,9 @@ body {
     height: 0;
     max-height: 400px;
     padding: 0 10px;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     background-color: #F9F9F9;
-    box-shadow: 0 0 3px #999;
+    box-shadow: var(--shadow);
     overflow-y: hidden;
     transition: padding 0.2s 0.2s, height 0.2s ease-in-out;
 }
@@ -165,11 +171,12 @@ ul {
 }
 
 .job {
-    width: calc(100% - 44px);
-    margin: 20px auto;
-    padding: 12px 22px;
-    border-radius: 8px;
-    box-shadow: 0 0 4px #acacac77;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 24px auto;
+    padding: 16px 22px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
     background-color: #F9F9F9;
     color: #222;
     transition: 0.2s box-shadow ease-in-out, 0.15s width ease;
@@ -180,9 +187,9 @@ ul {
 }
 
 .job:hover {
-    width: 89%;
+    width: calc(100% - 40px);
     transition: 0.2s box-shadow ease-in-out, 0.15s width ease;
-    box-shadow: 0 0 7px #acacac77;
+    box-shadow: var(--shadow-hover);
 }
 
 .job__position {
@@ -204,7 +211,7 @@ ul {
 .job__info {
     text-align: center;
     justify-content: space-between;
-    margin-top: 6px;
+    margin-top: 8px;
     font-size: 1.05em;
 }
 
@@ -214,14 +221,14 @@ ul {
 }
 
 .job__info__details {
-    margin-top: 6px;
+    margin-top: 8px;
     font-size: 0.83em;
     color: #34998a;
     cursor: text;
 }
 
 .jobs__paging {
-    margin: 1rem 0 2rem;
+    margin: 1.5rem 0 2rem;
     text-align: center;
 }
 
