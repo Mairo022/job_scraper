@@ -15,7 +15,7 @@ def get_jobs_cv_keskus(start, location, category):
         url = url + f'&start={start}' if start > 0 else url
         url = url + f'&search[categories][]={category}' if category != 0 else url
 
-        page = requests.get(url)
+        page = requests.get(url, timeout=5)
         soup = BeautifulSoup(page.content, "html.parser")
         jobs = soup.find(class_="jobs-list").find_all("a", class_="jobad-url")
 
@@ -61,7 +61,7 @@ def get_jobs_cv(start, location, category):
         url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ADS_LIMIT}&offset={start}&towns[]={location}&fuzzy=true&sorting=LATEST&showHidden=true"
         url = url + f'&categories[]={category}' if category != 0 else url
 
-        response = requests.get(url)
+        response = requests.get(url, timeout=5)
         if response.status_code == 200:
             jobs = response.json().get("vacancies", [])
 
