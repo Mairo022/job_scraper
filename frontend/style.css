@@ -188,6 +188,15 @@ body {
     text-decoration: none;
 }
 
+/* Error */
+
+.error {
+    margin-top: 3rem;
+    color: hsl(0, 75%, 58%);
+    font-size: 1.17em;
+    text-align: center;
+}
+
 /* Jobs */
 
 ul {

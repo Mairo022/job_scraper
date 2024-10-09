@@ -2,35 +2,28 @@
     require 'constants.php';
     require 'utils.php';
 
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
     $ip = get_ip_address();
     $locationID = get_location_id();
     $categoryID = get_category_id();
     [$offset, $offsetPrevious, $offsetNext] = get_offsets();
-    
-    $requestOptions = [
-        'http' => [
-            'header'  => "X-Real-IP: $ip",
-            'method'  => 'GET'
-        ],
-    ];
-    
-    $context  = stream_context_create($requestOptions);
-    $urlJobs = API_URL . "/jobs?location={$locationID}&start={$offset}&category={$categoryID}";
 
-    $response = @file_get_contents($urlJobs, false, $context);
-    $responseData = json_decode($response);
+    $url = API_URL . "/jobs?location={$locationID}&start={$offset}&category={$categoryID}";
+    $jobsRequest = request_job_data($url, $ip);
+    $responseCode = $jobsRequest["response_code"];
+    $responseData = $jobsRequest["response_data"];
 
-    $cv = $responseData->cv ?? null;
-    $cvk = $responseData->cv_keskus ?? null;
-
-    $jobs = get_combined_jobs_sorted_by_time($cv, $cvk);
+    $jobs = get_jobs($responseData);
 ?>
 <!DOCTYPE html>
 <html lang="ee">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css?v103">
+    <link rel="stylesheet" href="./style.css?v104">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <script defer src="script.js"></script>
     <title>Jobs</title>
@@ -65,6 +58,11 @@
                 </div>                
             </div>
             <ul>
+            <?php if ($responseCode !== 200): ?>
+                <div class="error">
+                    <?= $responseData ?>
+                </div>
+            <?php endif; ?>
             <?php foreach ($jobs as $job): ?>
                 <?php if (isset($job->positionTitle)): ?>
                     <li class="job job--cv">
@@ -96,24 +94,26 @@
                 <?php endif; ?>
             <?php endforeach; ?>
             </ul>
-            <div class="jobs__paging">
-                <a 
-                class="jobs__paging__page<?= $offset == 0 ? ' disabled' : '' ?>" 
-                href='<?= "?location={$locationID}&start={$offsetPrevious}&category={$categoryID}" ?>'
-                >
-                <svg class="jobs__paging__page__svg" strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
-                    <path d="M17.2 23.7 5.4 12 17.2.3l1.3 1.4L8.4 12l10.1 10.3z" />
-                </svg>
-            </a>
-                <a 
-                class="jobs__paging__page" 
-                href='<?= "?location={$locationID}&start={$offsetNext}&category={$categoryID}" ?>'
-                >
-                <svg class="jobs__paging__page__svg"strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
-                    <path d="M6.8 0.3 18.6 12 6.8 23.7 5.5 22.3 15.6 12 5.5 1.7z" />
-                </svg>
-            </a>
-            </div>
+            <?php if ($jobs): ?>
+                <div class="jobs__paging">
+                    <a 
+                    class="jobs__paging__page<?= $offset == 0 ? ' disabled' : '' ?>" 
+                    href='<?= "?location={$locationID}&start={$offsetPrevious}&category={$categoryID}" ?>'
+                    >
+                    <svg class="jobs__paging__page__svg" strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
+                        <path d="M17.2 23.7 5.4 12 17.2.3l1.3 1.4L8.4 12l10.1 10.3z" />
+                    </svg>
+                </a>
+                    <a 
+                    class="jobs__paging__page" 
+                    href='<?= "?location={$locationID}&start={$offsetNext}&category={$categoryID}" ?>'
+                    >
+                    <svg class="jobs__paging__page__svg"strokeWidth={0.8} stroke="currentColor" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlSpace="preserve">
+                        <path d="M6.8 0.3 18.6 12 6.8 23.7 5.5 22.3 15.6 12 5.5 1.7z" />
+                    </svg>
+                </a>
+                </div>
+            <?php endif; ?>
         </section>
     </main>
   </body>

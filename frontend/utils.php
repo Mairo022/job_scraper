@@ -1,4 +1,30 @@
 <?php 
+
+function request_job_data($url, $ip) {
+    $jobsRequest = curl_init($url);
+    curl_setopt($jobsRequest, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($jobsRequest, CURLOPT_HTTPHEADER, ["X-Real-IP: {$ip}"]);
+
+    $responseBody = curl_exec($jobsRequest);
+    $responseCode = curl_getinfo($jobsRequest, CURLINFO_HTTP_CODE);
+    $responseData = $responseCode === 200 ? json_decode($responseBody) : $responseBody;
+
+    curl_close($jobsRequest);
+
+    return [
+        'response_code' => $responseCode,
+        'response_data' => $responseData
+    ];
+}
+
+function get_jobs($responseData) {
+    $cv = $responseData->cv ?? null;
+    $cvk = $responseData->cv_keskus ?? null;
+    $jobs = get_combined_jobs_sorted_by_time($cv, $cvk);
+
+    return $jobs;
+}
+
 function format_salary_cvkeskus($salary) {
     if (!is_null($salary)) return "{$salary} | ";
 }
