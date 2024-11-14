@@ -66,7 +66,7 @@ def assign_jobs(cv_ads_older, cvk_ads_older, cv, cv_keskus):
 
 # Checks whether one's last ad is newer than other's first ad
 def evaluate_ads_age(cv, cvk):
-    if not cv or cvk:
+    if not cv or not cvk:
         return [False, False]
 
     cv_first_ad_date = cv[0].get('publishDate')
