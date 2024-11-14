@@ -3,17 +3,7 @@ import logging
 import time
 
 import scraper
-from constants import LOCATIONS_AVAILABLE, CACHE_LIFESPAN
-from pages import Pages
-
-
-def initialise_pages():
-    pages = dict()
-
-    for location in LOCATIONS_AVAILABLE:
-        pages[location] = Pages(location)
-
-    return pages
+from constants import CACHE_LIFESPAN
 
 
 def get_jobs(offset, location, cache, real_pages, category):

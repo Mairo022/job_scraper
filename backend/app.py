@@ -1,15 +1,15 @@
 from flask import Flask, jsonify, request, abort
 
 from RateLimiter import RateLimiter
+from RealPages import RealPages
 from appUtils import *
 from constants import LOCATIONS_AVAILABLE, CATEGORIES_AVAILABLE, ADS_LIMIT, LOCALHOST_IP
 
 app = Flask(__name__)
 
 app.cached_data = dict()
-app.real_pages = initialise_pages()
+app.real_pages = RealPages().pages
 app.rate_limiter = RateLimiter()
-
 
 @app.route("/api/jobs", methods=['GET'])
 def jobs_data():
