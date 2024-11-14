@@ -1,9 +1,9 @@
 import time
 
-from constants import ADS_LIMIT, CACHE_LIFESPAN
+from constants import ADS_LIMIT, CACHE_LIFESPAN, LOCATIONS_AVAILABLE
 
 
-class Pages:
+class _Pages:
     def __init__(self, location_id):
         self.pages = {0: {'cv': 0, 'cvk': 0}}
         self.last_updated = time.time()
@@ -59,22 +59,8 @@ class Pages:
         return time.time() - self.last_updated < CACHE_LIFESPAN
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+class RealPages:
+    def __init__(self):
+        self.pages = dict()
+        for location in LOCATIONS_AVAILABLE:
+            self.pages[location] = _Pages(location)
