@@ -40,6 +40,10 @@
                     <div class="it_filter__status"></div>
                     <span class="it_filter__text">IT only</span>
                 </a>
+                <button class="saved_filter">
+                    <div class="saved_filter__status"></div>
+                    <span class="saved_filter__text">Saved</span>
+                </button>
                 <div class="location-menu">
                     <div class="location__select">
                         <div class="location__select-active"><?= LOCATION_DEFAULT ?></div>
@@ -77,6 +81,7 @@
                                 <span class="job__row__detail"><?= format_time($job->publishDate) ?></span>
                             </div>
                         </div>
+                        <div class="job__save">Save</div>
                     </li>
                 <?php endif; ?>
                 <?php if (isset($job->position)): ?>
@@ -91,6 +96,7 @@
                                 <span class="job__row__detail"><?= format_time($job->time) ?></span>
                             </div>
                         </div>
+                        <div class="job__save">Save</div>
                     </li>
                 <?php endif; ?>
             <?php endforeach; ?>

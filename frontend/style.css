@@ -13,11 +13,15 @@ body {
             hsl(216, 53%, 14%) 150px,
             hsl(216, 53%, 12%) 550px
     );
-    font-family: 'Nunito', "Noto Sans", Tahoma, sans-serif;
-    font-size: 0.9em;
     min-height: 100vh;
     margin: 0;
     padding: 0 20px;
+}
+
+body,
+button {
+    font-family: 'Nunito', "Noto Sans", Tahoma, sans-serif;
+    font-size: 0.9em;
 }
 
 .header__title {
@@ -39,9 +43,55 @@ body {
 .filters {
     display: flex;
     gap: 20px 1rem;
-    margin: 6rem 0 3rem;
+    margin: 6rem auto 3rem;
     justify-content: center;
     flex-wrap: wrap;
+    width: 90%;
+}
+
+/* Saved filter */
+.saved_filter {
+    order: 3;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    flex: 1 1 120px;
+    max-width: 300px;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    color: #222;
+    border: none;
+    background-color: hsl(0, 0%, 86%);
+    text-decoration: none;
+    font-size: 1.17em;
+    cursor: pointer;
+}
+
+.saved_filter__text {
+    display: block;
+    text-align: left;
+}
+
+.saved_filter:hover {
+    .saved_filter__status {
+        background: hsl(171, 35%, 55%);
+    }
+}
+
+.saved_filter__status {
+    position: absolute;
+    display: inline-block;
+    right: 15.5px;
+    top: 16px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+    background: hsl(0, 0%, 60%);
+}
+
+.saved_filter__status.active {
+    background: hsl(171, 49%, 40%);
 }
 
 /* IT filter */
@@ -57,13 +107,15 @@ body {
     padding: 10px 20px;
     border-radius: var(--border-radius);
     color: #222;
-    background-color: #F9F9F9;
+    background-color: hsl(0, 0%, 94%);
     text-decoration: none;
     font-size: 1.17em;
 }
 
 .it_filter:hover {
-    background-color: hsl(0, 0%, 85%);
+    .it_filter__status {
+        background: hsl(171, 35%, 55%);
+    }
 }
 
 .it_filter__status {
@@ -102,7 +154,7 @@ body {
     padding: 10px 20px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    background-color: #F9F9F9;
+    background-color: hsl(0, 0%, 94%);
     color: #222;
     cursor: pointer;
     border-bottom: #F9F9F9;
@@ -126,6 +178,7 @@ body {
 }
 
 .location__options {
+    z-index: 20;
     top: 70px;
     position: absolute;
     width: calc(100% - 20px);
@@ -158,7 +211,6 @@ body {
 }
 
 .location__options.open {
-    z-index: 10;
     height: 400px;
     padding: 10px 10px;
     overflow-y: auto;
@@ -206,6 +258,7 @@ ul {
 }
 
 .job {
+    position: relative;
     box-sizing: border-box;
     width: 100%;
     margin: 24px auto;
@@ -221,11 +274,11 @@ ul {
     margin: 0 auto;
 }
 
-.job:hover {
+/* .job:hover {
     width: calc(100% - 40px);
     transition: 0.2s box-shadow ease-in-out, 0.15s width ease;
     box-shadow: var(--shadow-hover);
-}
+} */
 
 .job__position {
     text-align: center;
@@ -260,6 +313,37 @@ ul {
     font-size: 0.83em;
     color: #34998a;
     cursor: text;
+}
+
+.job:hover {
+    .job__save {
+        z-index: 0;
+        opacity: 1;
+        transition: opacity 0.15s ease-out;
+    }
+}
+
+.job__save {
+    z-index: -1;
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 4px 24px 4px 22px;
+    border-top: 1px solid hsl(0, 0%, 40%);
+    border-left: 1px solid hsl(0, 0%, 40%);
+    border-top-left-radius: 14px;
+    border-bottom-right-radius: var(--border-radius);
+    background-color: hsl(43, 15%, 90%);
+}
+
+.job__save.saved {
+    background-color: hsl(43, 80%, 78%);
+}
+
+.job__save:hover {
+    background-color: hsl(43, 80%, 65%);
 }
 
 .jobs__paging {
