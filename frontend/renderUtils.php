@@ -1,9 +1,9 @@
 <?php 
 
-function get_jobs($responseData) {
+function get_jobs($responseData, $locationID) {
     $cv = $responseData->cv ?? null;
     $cvk = $responseData->cv_keskus ?? null;
-    $jobs = get_combined_jobs_sorted_by_time($cv, $cvk);
+    $jobs = get_combined_jobs_sorted_by_time($cv, $cvk, $locationID);
 
     return $jobs;
 }
@@ -66,7 +66,7 @@ function format_time($time_arg_str) {
     if ($seconds > 0) return "{$seconds} s. tagasi";
 }
 
-function get_combined_jobs_sorted_by_time($cv, $cvk) {
+function get_combined_jobs_sorted_by_time($cv, $cvk, $locationID) {
     if (empty($cv) && empty($cv_keskus)) return array();
     if (empty($cv)) return $cvk;
     if (empty($cvk)) return $cv;
@@ -75,22 +75,27 @@ function get_combined_jobs_sorted_by_time($cv, $cvk) {
     $tempJobsCV = array();
     $tempJobsCVK = array();
 
-    for ($i = 0; $i < JOBS_PER_SITE; $i++) {
-        $timeCV = new DateTime($cv[$i]->publishDate);
-        $timeCVK = new DateTime($cvk[$i]->time);
+    $cvAdsLen = count($cv);
+    $cvkAdsLen = count($cvk);
+    $loopsAmount = $locationID == 1 ? 60 : JOBS_PER_SITE; 
+
+    for ($i = 0; $i < $loopsAmount; $i++) {
+        $timeCV = $cvAdsLen > $i ? new DateTime($cv[$i]->publishDate) : new DateTime($cv[$cvAdsLen - 1]->publishDate);
+        $timeCVK = $cvkAdsLen > $i ? new DateTime($cvk[$i]->time) : new DateTime($cvk[$cvkAdsLen - 1]->time);
         $isCVNewer = $timeCV > $timeCVK;
 
         if ($isCVNewer) {
-            foreach($tempJobsCV as $job) array_push($jobs, $job);
+            foreach($tempJobsCV as $job) array_push($jobs, $job); // Add all previous cv adds to jobs
             foreach($tempJobsCVK as $index => $job) {
+                // Current is newer than stored
                 if ($timeCV < new DateTime($job->time)) {
                     array_push($jobs, $job);
                     unset($tempJobsCVK[$index]);
                 } else break;
             }
 
-            array_push($jobs, $cv[$i]);
-            array_push($tempJobsCVK, $cvk[$i]);
+            if ($cvAdsLen > $i) array_push($jobs, $cv[$i]); // Add current cv ad to jobs
+            if ($cvkAdsLen > $i) array_push($tempJobsCVK, $cvk[$i]); // Add current cvk ad to cvk temp
             $tempJobsCV = array();
         }
 
@@ -103,8 +108,8 @@ function get_combined_jobs_sorted_by_time($cv, $cvk) {
                 } else break;
             }
 
-            array_push($jobs, $cvk[$i]);
-            array_push($tempJobsCV, $cv[$i]);
+            if ($cvkAdsLen > $i) array_push($jobs, $cvk[$i]);
+            if ($cvAdsLen > $i) array_push($tempJobsCV, $cv[$i]);
             $tempJobsCVK = array();
         }
     }

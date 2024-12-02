@@ -56,10 +56,14 @@ def get_jobs_cv_keskus(start, location, category):
 
 def get_jobs_cv(start, location, category):
     try:
+        # Load more ads when is Tallinn
+        start = start if location != 1 else start + 30
+        ads_to_load = ADS_LIMIT if location != 1 else 60
+
         location = LOCATIONS_CV.get(location)
         category = CATEGORIES_CV.get(category)
 
-        url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ADS_LIMIT}&offset={start}&towns[]={location}&fuzzy=true&sorting=LATEST&showHidden=true"
+        url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ads_to_load}&offset={start}&towns[]={location}&fuzzy=true&sorting=LATEST&showHidden=true"
         url = url + f'&categories[]={category}' if category != 0 else url
 
         response = requests.get(url, timeout=5)
