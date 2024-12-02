@@ -4,18 +4,16 @@ from datetime import datetime, timezone, timedelta
 
 def getTimeText(time, jobs, i):
     if time.split(" ")[-1] == "jäänud":
-        if i == 0:
-            job = jobs[i+1]
-            main_info = job.find("div", class_="main-info")
-            time = main_info.find("div").find_all("span")[-1]
+        i_change = 1 if i == 0 else -1
 
-            return time.text
-        if i <= ADS_LIMIT:
-            job = jobs[i-1]
-            main_info = job.find("div", class_="main-info")
-            time = main_info.find("div").find_all("span")[-1]
+        while ADS_LIMIT > i > 0:
+            i += i_change
+            job = jobs[i]
+            main = job.find("div", class_="main-info")
+            time_job = main.find("div").find_all("span")[-1].text
 
-            return time.text
+            if time_job.split(" ")[-1] != "jäänud":
+                return time_job
 
     return time
 
