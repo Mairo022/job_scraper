@@ -182,6 +182,11 @@ function handleSavedViewButtonClick() {
     else createSavedView()
 
     isSavedView = !isSavedView
+
+    const savedButtonStatus = savedButton.querySelector(".saved_filter__status")
+    
+    if (isSavedView) savedButtonStatus.classList.add("active")
+    else savedButtonStatus.classList.remove("active")
 }
 
 function updateSavedView() {
