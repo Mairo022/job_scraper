@@ -49,6 +49,7 @@ def get_jobs_cv_keskus(start, location, category):
     except Exception:
         traceback_str = traceback.format_exc()
         logging.error(f"CV Keskus:\n{traceback_str}")
+        print(traceback_str)
 
         return []
 
@@ -77,5 +78,6 @@ def get_jobs_cv(start, location, category):
     except Exception:
         traceback_str = traceback.format_exc()
         logging.error(f"CV:\n{traceback_str}")
+        print(traceback_str)
 
         return []
