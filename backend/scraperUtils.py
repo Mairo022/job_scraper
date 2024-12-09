@@ -4,9 +4,10 @@ from datetime import datetime, timezone, timedelta
 
 def getTimeText(time, jobs, i):
     if time.split(" ")[-1] == "jäänud":
-        i_change = 1 if i == 0 else -1
+        i_change = 1 if (i == 0) else -1
+        min_index = 0 if (i_change == 1) else 1
 
-        while ADS_LIMIT > i > 0:
+        while len(jobs) > i >= min_index:
             i += i_change
             job = jobs[i]
             main = job.find("div", class_="main-info")

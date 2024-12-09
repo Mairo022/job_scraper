@@ -155,7 +155,7 @@ function assignUnsavedJobStatus() {
 
 function assignSavedJobStatus() {
     const savedJobs = getSavedJobs()
-    if (savedJobs.length == 0) return
+    if (!savedJobs || savedJobs.length == 0) return
 
     const jobsUl = document.querySelector(".jobs > ul")
     let assigned = 0

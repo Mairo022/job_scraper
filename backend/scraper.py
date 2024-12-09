@@ -1,4 +1,6 @@
 import logging
+from time import sleep
+
 import requests
 import traceback
 from bs4 import BeautifulSoup
@@ -57,7 +59,7 @@ def get_jobs_cv_keskus(start, location, category):
 def get_jobs_cv(start, location, category):
     try:
         # Load more ads when is Tallinn
-        start = start if location != 1 else start + 30
+        start += 30 if (start != 0 and location == 1) else 0
         ads_to_load = ADS_LIMIT if location != 1 else 60
 
         location = LOCATIONS_CV.get(location)
