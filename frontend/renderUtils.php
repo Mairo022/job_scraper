@@ -67,7 +67,7 @@ function format_time($time_arg_str) {
 }
 
 function get_combined_jobs_sorted_by_time($cv, $cvk, $locationID) {
-    if (empty($cv) && empty($cv_keskus)) return array();
+    if (empty($cv) && empty($cvk)) return array();
     if (empty($cv)) return $cvk;
     if (empty($cvk)) return $cv;
     
