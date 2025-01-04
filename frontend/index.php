@@ -24,9 +24,9 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css?v104">
+    <link rel="stylesheet" href="./style.css?v106">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
-    <script defer src="script.js"></script>
+    <script defer src="script.js?v106"></script>
     <title>Jobs</title>
   </head>
   <body>
@@ -38,11 +38,11 @@
             <div class="filters">
                 <a class="it_filter" href='<?= $categoryID == 0 ? "?location=0&category=1" : "?location={$locationID}&category=0 " ?>'>
                     <div class="it_filter__status"></div>
-                    <span class="it_filter__text">IT only</span>
+                    <span class="it_filter__text">IT töö</span>
                 </a>
                 <button class="saved_filter">
                     <div class="saved_filter__status"></div>
-                    <span class="saved_filter__text">Saved</span>
+                    <span class="saved_filter__text">Salvestatud</span>
                 </button>
                 <div class="location-menu">
                     <div class="location__select">
@@ -81,7 +81,7 @@
                                 <span class="job__row__detail"><?= format_time($job->publishDate) ?></span>
                             </div>
                         </div>
-                        <div class="job__save">Save</div>
+                        <div class="job__save">Salvesta</div>
                     </li>
                 <?php endif; ?>
                 <?php if (isset($job->position)): ?>
@@ -96,7 +96,7 @@
                                 <span class="job__row__detail"><?= format_time($job->time) ?></span>
                             </div>
                         </div>
-                        <div class="job__save">Save</div>
+                        <div class="job__save">Salvesta</div>
                     </li>
                 <?php endif; ?>
             <?php endforeach; ?>

@@ -100,7 +100,7 @@ function handleSaveButtonClick(e) {
 
     if (doUnsave) {
         e.target.classList.remove("saved")
-        e.target.innerText = "Save"
+        e.target.innerText = "Salvesta"
         
         const savedJobsCleaned = savedJobs.filter(job => job?.url != url)
         localStorage.setItem("saved", JSON.stringify(savedJobsCleaned))
@@ -116,7 +116,7 @@ function handleSaveButtonClick(e) {
     }
 
     e.target.classList.add("saved")
-    e.target.innerText = "Saved"
+    e.target.innerText = "Salvestatud"
 
     savedJobs.push({title, company, url, added: new Date()})
     localStorage.setItem("saved", JSON.stringify(savedJobs))
@@ -134,7 +134,7 @@ function assignUnsavedJobStatus() {
 
             if (jobSaveEl.classList.contains("saved")) {
                 jobSaveEl.classList.remove("saved")
-                jobSaveEl.innerText = "Save"
+                jobSaveEl.innerText = "Salvesta"
             }
         }
 
@@ -148,7 +148,7 @@ function assignUnsavedJobStatus() {
 
         if (!isSaved && jobSaveEl.classList.contains("saved")) {
             jobSaveEl.classList.remove("saved")
-            jobSaveEl.innerText = "Save"
+            jobSaveEl.innerText = "Salvesta"
         }
     }   
 }
@@ -168,7 +168,7 @@ function assignSavedJobStatus() {
             const jobSaveEl = job.querySelector(".job__save")
 
             jobSaveEl.classList.add("saved")
-            jobSaveEl.innerText = "Saved"
+            jobSaveEl.innerText = "Salvestatud"
 
             assigned++
         }
@@ -211,10 +211,10 @@ function createSavedView() {
                 <div class="job__info">
                     <span class="job__info__company">${job.company}</span>
                     <div class="job__info__details">
-                        <span class="job__row__detail">Saved ${formatTime(job.added)}</span>
+                        <span class="job__row__detail">Salvestatud ${formatTime(job.added)}</span>
                     </div>
                 </div>
-                <div class="job__save saved">Remove</div>
+                <div class="job__save saved">Eemalda</div>
             </li>
         `)
     })

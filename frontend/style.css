@@ -55,7 +55,7 @@ button {
     position: relative;
     display: block;
     box-sizing: border-box;
-    flex: 1 1 120px;
+    flex: 1 1 160px;
     max-width: 300px;
     padding: 10px 20px;
     border-radius: var(--border-radius);
