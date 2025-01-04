@@ -1,9 +1,9 @@
 <?php 
 
-function get_jobs($responseData, $locationID) {
+function get_jobs($responseData) {
     $cv = $responseData->cv ?? null;
     $cvk = $responseData->cv_keskus ?? null;
-    $jobs = get_combined_jobs_sorted_by_time($cv, $cvk, $locationID);
+    $jobs = get_combined_jobs_sorted_by_time($cv, $cvk);
 
     return $jobs;
 }
@@ -66,79 +66,28 @@ function format_time($time_arg_str) {
     if ($seconds > 0) return "{$seconds} s. tagasi";
 }
 
-function get_combined_jobs_sorted_by_time($cv, $cvk, $locationID) {
+function get_combined_jobs_sorted_by_time($cv, $cvk) {
     if (empty($cv) && empty($cvk)) return array();
     if (empty($cv)) return $cvk;
     if (empty($cvk)) return $cv;
     
     $jobs = array();
-    $tempJobsCV = array();
-    $tempJobsCVK = array();
+    $cvLength = count($cv);
+    $cvkLength = count($cvk);
+    $i = $j = 0;
 
-    $cvAdsLen = count($cv);
-    $cvkAdsLen = count($cvk);
-    $loopsAmount = $locationID == 1 ? 60 : JOBS_PER_SITE; 
-
-    for ($i = 0; $i < $loopsAmount; $i++) {
-        $timeCV = $cvAdsLen > $i ? new DateTime($cv[$i]->publishDate) : new DateTime($cv[$cvAdsLen - 1]->publishDate);
-        $timeCVK = $cvkAdsLen > $i ? new DateTime($cvk[$i]->time) : new DateTime($cvk[$cvkAdsLen - 1]->time);
-        $isCVNewer = $timeCV > $timeCVK;
-
-        if ($isCVNewer) {
-            foreach($tempJobsCV as $job) array_push($jobs, $job); // Add all previous cv adds to jobs
-            foreach($tempJobsCVK as $index => $job) {
-                // Current is newer than stored
-                if ($timeCV < new DateTime($job->time)) {
-                    array_push($jobs, $job);
-                    unset($tempJobsCVK[$index]);
-                } else break;
-            }
-
-            if ($cvAdsLen > $i) array_push($jobs, $cv[$i]); // Add current cv ad to jobs
-            if ($cvkAdsLen > $i) array_push($tempJobsCVK, $cvk[$i]); // Add current cvk ad to cvk temp
-            $tempJobsCV = array();
-        }
-
-        if (!$isCVNewer) {
-            foreach($tempJobsCVK as $job) array_push($jobs, $job);
-            foreach($tempJobsCV as $index => $job) {
-                if ($timeCVK < new DateTime($job->publishDate)) {
-                    array_push($jobs, $job);
-                    unset($tempJobsCV[$index]);
-                } else break;
-            }
-
-            if ($cvkAdsLen > $i) array_push($jobs, $cvk[$i]);
-            if ($cvAdsLen > $i) array_push($tempJobsCV, $cv[$i]);
-            $tempJobsCVK = array();
+    while ($i < $cvLength && $j < $cvkLength) {
+        if (new DateTime($cv[$i]->publishDate) >= new DateTime($cvk[$j]->time)) {
+            array_push($jobs, $cv[$i]);
+            $i++;
+        } else {
+            array_push($jobs, $cvk[$j]);
+            $j++;
         }
     }
-
-    // Add remaining jobs from tempJobs arrays
-    $lengthTempJobsCV = count($tempJobsCV);
-    $lengthTempJobsCVK = count($tempJobsCVK);
-
-    if ($lengthTempJobsCV > 0) {
-        foreach($tempJobsCV as $index => $job) {
-            if (isset($tempJobsCVK[$index])) {
-                $isCVNewer = new DateTime($job->publishDate) > new DateTime($tempJobsCVK[$index]->time);
-
-                if ($isCVNewer) {
-                    array_push($jobs, $job);
-                } else {
-                    array_push($jobs, $tempJobsCVK[$index]);
-                }
-            } else {
-                array_push($jobs, $job);
-                continue;
-            }
-
-            if ($index == $lengthTempJobsCV - 1) {
-                for ($j = $index; $j < $lengthTempJobsCVK; $j++)
-                    array_push($jobs, $tempJobsCVK[$j]);
-            }
-        }
-    } else foreach($tempJobsCVK as $job) array_push($jobs, $job);
+    
+    for (; $i < $cvLength; $i++) array_push($jobs, $cv[$i]);
+    for (; $j < $cvkLength; $j++) array_push($jobs, $cvk[$j]);
 
     return $jobs;
 }

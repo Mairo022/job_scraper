@@ -17,7 +17,7 @@
     $responseCode = $jobsRequest["response_code"];
     $responseData = $jobsRequest["response_data"];
 
-    $jobs = get_jobs($responseData, $locationID);
+    $jobs = get_jobs($responseData);
 ?>
 <!DOCTYPE html>
 <html lang="ee">
