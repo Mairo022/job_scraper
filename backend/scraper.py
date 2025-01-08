@@ -1,27 +1,25 @@
 import logging
-from time import sleep
+from typing import List
 
 import requests
 import traceback
 from bs4 import BeautifulSoup
-from constants import LOCATIONS_CVK, LOCATIONS_CV, ADS_LIMIT, CATEGORIES_CVK, CATEGORIES_CV
 from scraperUtils import *
 
 
-def get_jobs_cv_keskus(start, location, category):
-    try:
-        location = LOCATIONS_CVK.get(location)
-        category = CATEGORIES_CVK.get(category)
+def get_jobs_cv_keskus(start, location, category) -> List:
+    jobs_clean = []
 
-        url = f'https://www.cvkeskus.ee/toopakkumised?op=search&search[job_salary]=3&ga_track=homepage&search[locations][]={location}&search[keyword]=&dir=1&sort=activation_date'
-        url = url + f'&start={start}' if start > 0 else url
-        url = url + f'&search[categories][]={category}' if category != 0 else url
+    try:
+        url = create_cvk_url(start, location, category)
 
         page = requests.get(url, timeout=5)
+
+        if page.status_code != 200:
+            raise Exception(f"CVK response code != 200, is: {page.status_code}")
+
         soup = BeautifulSoup(page.content, "html.parser")
         jobs = soup.find(class_="jobs-list").find_all("a", class_="jobad-url")
-
-        jobs_list = []
 
         for i, job in enumerate(jobs):
             main_info = job.find("div", class_="main-info")
@@ -44,46 +42,41 @@ def get_jobs_cv_keskus(start, location, category):
                 "link": link_text
             }
 
-            jobs_list.append(job_dict)
-        
-        return jobs_list
+            jobs_clean.append(job_dict)
 
     except Exception:
         traceback_str = traceback.format_exc()
         logging.error(f"CV Keskus:\n{traceback_str}")
         print(traceback_str)
+        jobs_clean.clear()
 
-        return []
+    finally:
+        return jobs_clean
 
 
-def get_jobs_cv(start, location, category):
+def get_jobs_cv(start, location, category) -> List:
+    jobs_clean = []
+
     try:
-        # Load more ads when is Tallinn
-        start += 30 if (start != 0 and location == 1) else 0
-        ads_to_load = ADS_LIMIT if location != 1 else 60
-
-        location = LOCATIONS_CV.get(location)
-        category = CATEGORIES_CV.get(category)
-
-        url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ads_to_load}&offset={start}&towns[]={location}&fuzzy=true&sorting=LATEST&showHidden=true"
-        url = url + f'&categories[]={category}' if category != 0 else url
+        url = create_cv_url(start, location, category)
 
         response = requests.get(url, timeout=5)
-        if response.status_code == 200:
-            jobs = response.json().get("vacancies", [])
 
-            jobs_clean = []
-            keys_to_keep = ["id", "positionTitle", "salaryFrom", "salaryTo", "hourlySalary", "publishDate", "employerName"]
+        if response.status_code != 200:
+            raise Exception(f"CV response code != 200, is: {response.status_code}")
 
-            for job in jobs:
-                job_clean = {key: job.get(key) for key in keys_to_keep}
-                jobs_clean.append(job_clean)
+        jobs = response.json().get("vacancies", [])
+        keys_to_keep = ["id", "positionTitle", "salaryFrom", "salaryTo", "hourlySalary", "publishDate", "employerName"]
 
-            return jobs_clean
+        for job in jobs:
+            job_clean = {key: job.get(key) for key in keys_to_keep}
+            jobs_clean.append(job_clean)
 
     except Exception:
         traceback_str = traceback.format_exc()
         logging.error(f"CV:\n{traceback_str}")
         print(traceback_str)
+        jobs_clean.clear()
 
-        return []
+    finally:
+        return jobs_clean

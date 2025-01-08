@@ -10,6 +10,7 @@
 # 8 - Viimsi
 # 9 - Viljandi
 # 10 - Võru
+from enum import Enum
 
 MAX_REQUESTS_PER_MIN_BY_IP = 10
 
@@ -19,7 +20,22 @@ CACHE_LIFESPAN = 1800
 
 ADS_LIMIT = 30
 
-LOCATIONS_AVAILABLE = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+class LOCATIONS(Enum):
+    ALL = 0
+    TALLINN = 1
+    TARTU = 2
+    PÄRNU = 3
+    HAAPSALU = 4
+    JÕGEVA = 5
+    NARVA = 6
+    RAKVERE = 7
+    VIIMSI = 8
+    VILJANDI = 9
+    VÕRU = 10
+
+
+LOCATIONS_AVAILABLE = tuple(location.value for location in LOCATIONS)
 
 LOCATIONS_CV = {
     0: "",

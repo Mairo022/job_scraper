@@ -1,4 +1,5 @@
 import time
+from typing import List
 
 from constants import ADS_LIMIT, CACHE_LIFESPAN, LOCATIONS_AVAILABLE
 
@@ -9,7 +10,7 @@ class _Pages:
         self.last_updated = time.time()
         self.location_id = location_id
 
-    def get_pages(self, offset) -> list:
+    def get_pages(self, offset) -> List:
         current_pages = self.pages.get(offset)
         previous_pages = self.pages.get(offset-ADS_LIMIT)
 
@@ -55,7 +56,7 @@ class _Pages:
 
         self.last_updated = time.time()
 
-    def __is_fresh(self):
+    def __is_fresh(self) -> bool:
         return time.time() - self.last_updated < CACHE_LIFESPAN
 
 

@@ -12,7 +12,7 @@ class RateLimiter:
         ip = ip.strip()
         self.requests[ip] += 1
 
-    def is_limited(self, ip):
+    def is_limited(self, ip) -> bool:
         ip = ip.strip()
         now = time.time()
         is_requests_minute_old = now - self.updated_at > 60

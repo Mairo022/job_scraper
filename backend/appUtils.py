@@ -1,12 +1,13 @@
 import os
 import logging
 import time
+from typing import List, Dict
 
 import scraper
 from constants import CACHE_LIFESPAN
 
 
-def get_jobs(offset, location, cache, real_pages, category):
+def get_jobs(offset, location, cache, real_pages, category) -> Dict[str, List]:
     if offset == 0 and category == 0:
         cached_data_item = cache.get(str(location))
 
@@ -19,7 +20,7 @@ def get_jobs(offset, location, cache, real_pages, category):
     cv_ads_older, cvk_ads_older = evaluate_ads_age(cv, cvk)
 
     if category != 0:
-        return assign_jobs(cv_ads_older, cvk_ads_older, cv, cvk)
+        return get_evaluated_jobs(cv_ads_older, cvk_ads_older, cv, cvk)
 
     real_pages.set_pages(offset, start_cv, start_cvk, cv_ads_older, cvk_ads_older)
 
@@ -29,7 +30,7 @@ def get_jobs(offset, location, cache, real_pages, category):
             "time": time.time()
         }
 
-    job_ads = assign_jobs(cv_ads_older, cvk_ads_older, cv, cvk)
+    job_ads = get_evaluated_jobs(cv_ads_older, cvk_ads_older, cv, cvk)
 
     return job_ads
 
@@ -41,10 +42,10 @@ def initialise_logging():
         os.makedirs(log_folder)
 
     log_file = os.path.join(log_folder, "app.log")
-    logging.basicConfig(filename=log_file, level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.basicConfig(filename=log_file, level=logging.WARNING, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-def assign_jobs(cv_ads_older, cvk_ads_older, cv, cv_keskus):
+def get_evaluated_jobs(cv_ads_older, cvk_ads_older, cv, cv_keskus) -> Dict[str, List]:
     if cv_ads_older:
         return {"cv_keskus": cv_keskus, "cv": []}
 
@@ -55,7 +56,7 @@ def assign_jobs(cv_ads_older, cvk_ads_older, cv, cv_keskus):
 
 
 # Checks whether one's last ad is newer than other's first ad
-def evaluate_ads_age(cv, cvk):
+def evaluate_ads_age(cv, cvk) -> List[bool]:
     if not cv or not cvk:
         return [False, False]
 
@@ -70,5 +71,5 @@ def evaluate_ads_age(cv, cvk):
     return [cv_ads_older, cvk_ads_older]
 
 
-def is_cache_fresh(cache_time):
+def is_cache_fresh(cache_time) -> bool:
     return time.time() - cache_time < CACHE_LIFESPAN

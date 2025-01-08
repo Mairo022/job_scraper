@@ -1,8 +1,8 @@
-from constants import ADS_LIMIT
+from constants import ADS_LIMIT, LOCATIONS_CVK, CATEGORIES_CVK, LOCATIONS_CV, CATEGORIES_CV, LOCATIONS
 from datetime import datetime, timezone, timedelta
 
 
-def getTimeText(time, jobs, i):
+def getTimeText(time, jobs, i) -> str:
     if time.split(" ")[-1] == "jäänud":
         i_change = 1 if (i == 0) else -1
         min_index = 0 if (i_change == 1) else 1
@@ -53,3 +53,28 @@ def convertCVKeskusToCVTimeFormat(time_input: str) -> str:
         return final_time.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
 
     return current_time.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+
+
+def create_cvk_url(start, location, category) -> str:
+    location = LOCATIONS_CVK.get(location)
+    category = CATEGORIES_CVK.get(category)
+
+    url = f'https://www.cvkeskus.ee/toopakkumised?op=search&search[job_salary]=3&ga_track=homepage&search[locations][]={location}&search[keyword]=&dir=1&sort=activation_date'
+    url = url + f'&start={start}' if start > 0 else url
+    url = url + f'&search[categories][]={category}' if category != 0 else url
+
+    return url
+
+
+def create_cv_url(start, location, category) -> str:
+    # Load more ads when is Tallinn
+    start += 30 if (location == LOCATIONS.TALLINN.value and start != 0) else 0
+    ads_to_load = ADS_LIMIT if location != LOCATIONS.TALLINN.value else 60
+
+    location = LOCATIONS_CV.get(location)
+    category = CATEGORIES_CV.get(category)
+
+    url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ads_to_load}&offset={start}&towns[]={location}&fuzzy=true&sorting=LATEST&showHidden=true"
+    url = url + f'&categories[]={category}' if category != 0 else url
+
+    return url
