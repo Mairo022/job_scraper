@@ -55,7 +55,7 @@ def convertCVKeskusToCVTimeFormat(time_input: str) -> str:
     return current_time.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
 
 
-def create_cvk_url(start, location, category) -> str:
+def create_cvk_url(start: int, location: int, category: int) -> str:
     location = LOCATIONS_CVK.get(location)
     category = CATEGORIES_CVK.get(category)
 
@@ -66,15 +66,11 @@ def create_cvk_url(start, location, category) -> str:
     return url
 
 
-def create_cv_url(start, location, category) -> str:
-    # Load more ads when is Tallinn
-    start += 30 if (location == LOCATIONS.TALLINN.value and start != 0) else 0
-    ads_to_load = ADS_LIMIT if location != LOCATIONS.TALLINN.value else 60
-
+def create_cv_url(start: int, location: int, category: int) -> str:
     location = LOCATIONS_CV.get(location)
     category = CATEGORIES_CV.get(category)
 
-    url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ads_to_load}&offset={start}&towns[]={location}&fuzzy=true&sorting=LATEST&showHidden=true"
+    url = f"https://cv.ee/api/v1/vacancy-search-service/search?limit={ADS_LIMIT}&offset={start}&towns[]={location}&fuzzy=true&sorting=LATEST&showHidden=true"
     url = url + f'&categories[]={category}' if category != 0 else url
 
     return url

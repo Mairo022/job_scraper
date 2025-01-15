@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import TypedDict
 
 import requests
 import traceback
@@ -7,8 +7,8 @@ from bs4 import BeautifulSoup
 from scraperUtils import *
 
 
-def get_jobs_cv_keskus(start, location, category) -> List:
-    jobs_clean = []
+def get_jobs_cv_keskus(start: int, location: int, category: int) -> list["_CvkJobs"]:
+    jobs_clean: list[_CvkJobs] = []
 
     try:
         url = create_cvk_url(start, location, category)
@@ -34,7 +34,7 @@ def get_jobs_cv_keskus(start, location, category) -> List:
             salary_text = salary.text.rsplit("\xa0", 1)[0] if salary is not None else None
             link_text = "https://www.cvkeskus.ee" + link
 
-            job_dict = {
+            job_dict: _CvkJobs = {
                 "position": position.text,
                 "company": company.text,
                 "time": convertCVKeskusToCVTimeFormat(time_text),
@@ -54,8 +54,8 @@ def get_jobs_cv_keskus(start, location, category) -> List:
         return jobs_clean
 
 
-def get_jobs_cv(start, location, category) -> List:
-    jobs_clean = []
+def get_jobs_cv(start: int, location: int, category: int) -> list["_CvJobs"]:
+    jobs_clean: list[_CvJobs] = []
 
     try:
         url = create_cv_url(start, location, category)
@@ -66,10 +66,10 @@ def get_jobs_cv(start, location, category) -> List:
             raise Exception(f"CV response code != 200, is: {response.status_code}")
 
         jobs = response.json().get("vacancies", [])
-        keys_to_keep = ["id", "positionTitle", "salaryFrom", "salaryTo", "hourlySalary", "publishDate", "employerName"]
+        keys_to_keep = _CvJobs.__annotations__.keys()
 
         for job in jobs:
-            job_clean = {key: job.get(key) for key in keys_to_keep}
+            job_clean: _CvJobs = {key: job.get(key) for key in keys_to_keep}
             jobs_clean.append(job_clean)
 
     except Exception:
@@ -80,3 +80,21 @@ def get_jobs_cv(start, location, category) -> List:
 
     finally:
         return jobs_clean
+
+
+class _CvJobs(TypedDict):
+    id: int
+    positionTitle: str
+    salaryFrom: int | None
+    salaryTo: int | None
+    hourlySalary: bool
+    publishDate: str
+    employerName: str
+
+
+class _CvkJobs(TypedDict):
+    position: str
+    company: str
+    time: str
+    salary: str | None
+    link: str

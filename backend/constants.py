@@ -1,15 +1,3 @@
-# Locations
-# 0 - All
-# 1 - Tallinn
-# 2 - Tartu
-# 3 - Pärnu
-# 4 - Haapsalu
-# 5 - Jõgeva
-# 6 - Narva
-# 7 - Rakvere
-# 8 - Viimsi
-# 9 - Viljandi
-# 10 - Võru
 from enum import Enum
 
 MAX_REQUESTS_PER_MIN_BY_IP = 10
@@ -25,14 +13,14 @@ class LOCATIONS(Enum):
     ALL = 0
     TALLINN = 1
     TARTU = 2
-    PÄRNU = 3
+    PARNU = 3
     HAAPSALU = 4
-    JÕGEVA = 5
+    JOGEVA = 5
     NARVA = 6
     RAKVERE = 7
     VIIMSI = 8
     VILJANDI = 9
-    VÕRU = 10
+    VORU = 10
 
 
 LOCATIONS_AVAILABLE = tuple(location.value for location in LOCATIONS)
@@ -65,11 +53,13 @@ LOCATIONS_CVK = {
     10: 22
 }
 
-# Categories
-# 0 - All
-# 1 - Information technology
 
-CATEGORIES_AVAILABLE = (0, 1)
+class CATEGORIES(Enum):
+    ALL = 0
+    IT = 1
+
+
+CATEGORIES_AVAILABLE = tuple(category.value for category in CATEGORIES)
 
 CATEGORIES_CV = {
     0: 0,
