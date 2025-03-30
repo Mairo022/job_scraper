@@ -16,40 +16,35 @@ location_handlers: dict[int, LocationHandler] = {location: LocationHandler() for
 
 @app.route("/api/jobs", methods=['GET'])
 def jobs_data():
+    remote_ip = request.remote_addr
+    real_ip = request.headers.get('X-Real-IP', None)
+    start = int(request.args.get("start", 0))
+    location = int(request.args.get("location", 0))
+    category = int(request.args.get("category", 0))
+
+    if remote_ip != LOCALHOST_IP or not real_ip:
+        abort(403)
+
+    if rate_limiter.is_limited(real_ip):
+        abort(429, "Too many requests within a minute")
+    else:
+        rate_limiter.log_request(real_ip)
+
+    if start < 0 or start % ADS_LIMIT != 0:
+        abort(400, "Invalid offset")
+
+    if location not in LOCATIONS_AVAILABLE:
+        abort(400, "Invalid location id")
+
+    if category not in CATEGORIES_AVAILABLE:
+        abort(400, "Invalid category")
+
     try:
-        remote_ip = request.remote_addr
-        real_ip = request.headers.get('X-Real-IP', None)
-        start = int(request.args.get("start", 0))
-        location = int(request.args.get("location", 0))
-        category = int(request.args.get("category", 0))
-
-        if remote_ip != LOCALHOST_IP or not real_ip:
-            abort(403)
-
-        if rate_limiter.is_limited(real_ip):
-            abort(429, "Too many requests within a minute")
-        else:
-            rate_limiter.log_request(real_ip)
-
-        if start < 0 or start % ADS_LIMIT != 0:
-            abort(400, "Invalid offset")
-
-        if location not in LOCATIONS_AVAILABLE:
-            abort(400, "Invalid location id")
-
-        if category not in CATEGORIES_AVAILABLE:
-            abort(400, "Invalid category")
-
         jobs = location_handlers.get(location).get_jobs(start, location, category)
-
         return jsonify(jobs)
-
     except Exception:
         traceback_str = traceback.format_exc()
         logging.error(f"App Route:\n{traceback_str}")
-        print(traceback_str)
-
-        abort(500)
 
 
 def initialise_logging() -> None:

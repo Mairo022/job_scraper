@@ -34,7 +34,7 @@ button {
 }
 
 .jobs {
-    margin: 0 auto;
+    margin: 0 auto 2rem;
     max-width: 700px;
     width: 90%;
 }
@@ -348,7 +348,7 @@ ul {
 }
 
 .jobs__paging {
-    margin: 1.5rem 0 2rem;
+    margin: 1.5rem 0 0;
     text-align: center;
 }
 
