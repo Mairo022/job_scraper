@@ -1,11 +1,3 @@
-const cvItems = document.querySelectorAll(".job--cv")
-const cvkeskusItems = document.querySelectorAll(".job--cvkeskus")
-
-const allButton = document.querySelector("#allBtn")
-const cvButton = document.querySelector("#cvBtn")
-const cvkeskusButton = document.querySelector("#cvkeskusBtn")
-
-const body = document.querySelector("body")
 const locationSelect = document.querySelector(".location__select")
 const locationSelectText = document.querySelector(".location__select-active")
 const locationSelectButton = document.querySelector(".location__select-button")
@@ -19,7 +11,7 @@ let isSavedView = false
 const urlParams = new URLSearchParams(window.location.search)
 let isLocationsOpen = false
 
-body.addEventListener("click", handleBodyClick)
+document.body.addEventListener("click", handleBodyClick)
 locationSelect.addEventListener("click", handleLocationSelectState)
 savedButton.addEventListener("click", handleSavedViewButtonClick)
 
@@ -161,7 +153,7 @@ function assignSavedJobStatus() {
     let assigned = 0
 
     for (const job of jobsUl.children) {
-        const url = job.querySelector(".job__position > a").href
+        const url = job.querySelector(".job__position > a")?.href
         const isSaved = savedJobs.some(savedJob => savedJob.url === url)
 
         if (isSaved) {
@@ -221,8 +213,9 @@ function createSavedView() {
 
     const jobsUl = document.querySelector(".jobs > ul")
     const paging = document.querySelector(".jobs__paging")
-    jobsUl.style.display = "none"
-    paging.style.display = "none"
+
+    if (jobsUl) jobsUl.style.display = "none"
+    if (paging) paging.style.display = "none"
 
     ul.className = "jobs__saved"
     jobsSection.appendChild(ul)
@@ -231,8 +224,9 @@ function createSavedView() {
 function removeSavedView() {
     const jobsUl = document.querySelector(".jobs > ul")
     const paging = document.querySelector(".jobs__paging")
-    jobsUl.style.display = "block"
-    paging.style.display = "block"
+
+    if (jobsUl) jobsUl.style.display = "block"
+    if (paging) paging.style.display = "block"
 
     const savedJobsUl = document.querySelector(".jobs__saved")
     savedJobsUl.remove()
